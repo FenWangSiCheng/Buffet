@@ -1,0 +1,6 @@
+#include "BaseTarget.xcconfig"
+PRODUCT_BUNDLE_IDENTIFIER = cn.com.fenrir-inc.FenrirPay.stg
+APP_DISPLAY_NAME = 飞狼GO Stg
+// Demo URL; replace with this environment's backend when available.
+// The empty expansion prevents // from becoming an xcconfig comment.
+API_BASE_URL = https:/$()/store/api

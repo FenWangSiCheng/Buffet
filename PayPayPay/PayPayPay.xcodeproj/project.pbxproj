@@ -59,6 +59,7 @@
 		982CEF56214BB78FA29E036D /* RepositoryDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674CDE44BCBF29E81464632D /* RepositoryDoubles.swift */; };
 		F6760EDE41F8F309E1AAB28F /* AppLaunchPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F54B37EDFFDDF5A5FC27A71 /* AppLaunchPerformanceTests.swift */; };
 		64398A4DE27920F7D6236F4D /* CatalogFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB281925E89D1FFEA9A35B59 /* CatalogFlowUITests.swift */; };
+		6DF66A797FC3E7324580543F /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02EB724B236DD913E873F60 /* AppEnvironment.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,6 +137,15 @@
 		674CDE44BCBF29E81464632D /* RepositoryDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RepositoryDoubles.swift"; sourceTree = "<group>"; };
 		5F54B37EDFFDDF5A5FC27A71 /* AppLaunchPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLaunchPerformanceTests.swift"; sourceTree = "<group>"; };
 		FB281925E89D1FFEA9A35B59 /* CatalogFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatalogFlowUITests.swift"; sourceTree = "<group>"; };
+		1B0C51E74558BCE8241FC567 /* BaseProject.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = BaseProject.xcconfig; sourceTree = "<group>"; };
+		EFD629D125A88C9902E1F523 /* dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = dev.xcconfig; sourceTree = "<group>"; };
+		39503C733AF2D629B5D89FD3 /* stg.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = stg.xcconfig; sourceTree = "<group>"; };
+		E5B602EF4256B97B22FAD903 /* pro.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = pro.xcconfig; sourceTree = "<group>"; };
+		C1E79ED1842B406123C5C181 /* BaseTarget.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = BaseTarget.xcconfig; sourceTree = "<group>"; };
+		C51A58C2EB54E6504E112060 /* dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = dev.xcconfig; sourceTree = "<group>"; };
+		1D1196903985A4D643ACA395 /* stg.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = stg.xcconfig; sourceTree = "<group>"; };
+		426B4900450B61C79BA6906F /* pro.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = pro.xcconfig; sourceTree = "<group>"; };
+		D02EB724B236DD913E873F60 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +194,7 @@
 		9E4DE3BE45019DCD7A43CF46 /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				D02EB724B236DD913E873F60 /* AppEnvironment.swift */,
 				27907B7B2CC7D228A7AFC40B /* AppDelegate.swift */,
 				F8C457EF511586DB7FAC7CE3 /* DependencyInjection */,
 				1591F92C24EBD8AE001AA4A7 /* Info.plist */,
@@ -411,6 +422,7 @@
 		D3507EF6B52C05947EFC6471 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				F71BF9FF4B8969C827E4C105 /* Configurations */,
 				1591F92424EBD8AE001AA4A7 /* Assets.xcassets */,
 				7022004683234A7668B68D90 /* Fixtures */,
 				D91CF1235FFF89088148195F /* Preview Content */,
@@ -506,6 +518,37 @@
 				1591F93C24EBD8AE001AA4A7 /* PayPayPayUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		05FEFD03DABEA9F823C1130F /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				1B0C51E74558BCE8241FC567 /* BaseProject.xcconfig */,
+				EFD629D125A88C9902E1F523 /* dev.xcconfig */,
+				39503C733AF2D629B5D89FD3 /* stg.xcconfig */,
+				E5B602EF4256B97B22FAD903 /* pro.xcconfig */,
+			);
+			path = Project;
+			sourceTree = "<group>";
+		};
+		7523EB199CA132A7B43E3F4F /* Targets */ = {
+			isa = PBXGroup;
+			children = (
+				C1E79ED1842B406123C5C181 /* BaseTarget.xcconfig */,
+				C51A58C2EB54E6504E112060 /* dev.xcconfig */,
+				1D1196903985A4D643ACA395 /* stg.xcconfig */,
+				426B4900450B61C79BA6906F /* pro.xcconfig */,
+			);
+			path = Targets;
+			sourceTree = "<group>";
+		};
+		F71BF9FF4B8969C827E4C105 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				05FEFD03DABEA9F823C1130F /* Project */,
+				7523EB199CA132A7B43E3F4F /* Targets */,
+			);
+			path = Configurations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -649,6 +692,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6DF66A797FC3E7324580543F /* AppEnvironment.swift in Sources */,
 				359AD8083E72757538295A9F /* AppDelegate.swift in Sources */,
 				3809EB0E388D4A9783BABFFA /* AppContainer.swift in Sources */,
 				54C4472BCDE963A68255B27F /* CatalogPreviews.swift in Sources */,
@@ -739,8 +783,9 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		1591F94324EBD8AE001AA4A7 /* Debug */ = {
+		F4295E9B059149341A3E8435 /* Debug-dev */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EFD629D125A88C9902E1F523 /* dev.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -790,18 +835,140 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
-			name = Debug;
+			name = "Debug-dev";
 		};
-		1591F94424EBD8AE001AA4A7 /* Release */ = {
+		A336C96D80376007C8FA809F /* Debug-stg */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 39503C733AF2D629B5D89FD3 /* stg.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Debug-stg";
+		};
+		257316F182852F81CF046A5C /* Debug-pro */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E5B602EF4256B97B22FAD903 /* pro.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Debug-pro";
+		};
+		AFE9E51DC2953B978308500E /* Release-dev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EFD629D125A88C9902E1F523 /* dev.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -845,7 +1012,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -853,10 +1019,121 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
-			name = Release;
+			name = "Release-dev";
 		};
-		1591F94624EBD8AE001AA4A7 /* Debug */ = {
+		A919C64B84CF3F26B2B7D924 /* Release-stg */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 39503C733AF2D629B5D89FD3 /* stg.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-stg";
+		};
+		86C2902CD26AD862FA40748C /* Release-pro */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E5B602EF4256B97B22FAD903 /* pro.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-pro";
+		};
+		84729995C1346D78728F43BA /* Debug-dev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C51A58C2EB54E6504E112060 /* dev.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -866,7 +1143,6 @@
 				DEVELOPMENT_TEAM = 533H75UL22;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = PayPayPay/Application/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -874,18 +1150,16 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "cn.com.fenrir-inc.FenrirPay";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "PayPayPay/Application/PayPayPay-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = Debug;
+			name = "Debug-dev";
 		};
-		1591F94724EBD8AE001AA4A7 /* Release */ = {
+		B989F0288E216B384647A645 /* Debug-stg */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1D1196903985A4D643ACA395 /* stg.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -895,7 +1169,6 @@
 				DEVELOPMENT_TEAM = 533H75UL22;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = PayPayPay/Application/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -903,16 +1176,115 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "cn.com.fenrir-inc.FenrirPay";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "PayPayPay/Application/PayPayPay-Bridging-Header.h";
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
-			name = Release;
+			name = "Debug-stg";
 		};
-		1591F94924EBD8AE001AA4A7 /* Debug */ = {
+		1E1370B6FD1556D797911C6F /* Debug-pro */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 426B4900450B61C79BA6906F /* pro.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"PayPayPay/Resources/Preview Content\"";
+				DEVELOPMENT_TEAM = 533H75UL22;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = PayPayPay/Application/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "PayPayPay/Application/PayPayPay-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = "Debug-pro";
+		};
+		6935A8E985DD24D15AEE30B0 /* Release-dev */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C51A58C2EB54E6504E112060 /* dev.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"PayPayPay/Resources/Preview Content\"";
+				DEVELOPMENT_TEAM = 533H75UL22;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = PayPayPay/Application/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "PayPayPay/Application/PayPayPay-Bridging-Header.h";
+			};
+			name = "Release-dev";
+		};
+		0121F1621D256855F0FACD17 /* Release-stg */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1D1196903985A4D643ACA395 /* stg.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"PayPayPay/Resources/Preview Content\"";
+				DEVELOPMENT_TEAM = 533H75UL22;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = PayPayPay/Application/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "PayPayPay/Application/PayPayPay-Bridging-Header.h";
+			};
+			name = "Release-stg";
+		};
+		1F2D94F6A4D7EE21A58F5737 /* Release-pro */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 426B4900450B61C79BA6906F /* pro.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"PayPayPay/Resources/Preview Content\"";
+				DEVELOPMENT_TEAM = 533H75UL22;
+				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = PayPayPay/Application/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "PayPayPay/Application/PayPayPay-Bridging-Header.h";
+			};
+			name = "Release-pro";
+		};
+		E2372DA1F9D9A8A216DE03F2 /* Debug-dev */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -920,7 +1292,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 533H75UL22;
 				INFOPLIST_FILE = PayPayPayTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -928,13 +1299,11 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PayPayPay.app/PayPayPay";
 			};
-			name = Debug;
+			name = "Debug-dev";
 		};
-		1591F94A24EBD8AE001AA4A7 /* Release */ = {
+		7C6D2515323CBD90D3A3F783 /* Debug-stg */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -942,7 +1311,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 533H75UL22;
 				INFOPLIST_FILE = PayPayPayTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -950,13 +1318,87 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PayPayPay.app/PayPayPay";
 			};
-			name = Release;
+			name = "Debug-stg";
 		};
-		1591F94C24EBD8AE001AA4A7 /* Debug */ = {
+		FC3F1E1E634C832C360B353A /* Debug-pro */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 533H75UL22;
+				INFOPLIST_FILE = PayPayPayTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PayPayPay.app/PayPayPay";
+			};
+			name = "Debug-pro";
+		};
+		C30605A8E0D5649CF8F5548E /* Release-dev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 533H75UL22;
+				INFOPLIST_FILE = PayPayPayTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PayPayPay.app/PayPayPay";
+			};
+			name = "Release-dev";
+		};
+		4CDC374752C0B7A5FDF74FF9 /* Release-stg */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 533H75UL22;
+				INFOPLIST_FILE = PayPayPayTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PayPayPay.app/PayPayPay";
+			};
+			name = "Release-stg";
+		};
+		614E6692D59F121DD90F8F4F /* Release-pro */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 533H75UL22;
+				INFOPLIST_FILE = PayPayPayTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PayPayPay.app/PayPayPay";
+			};
+			name = "Release-pro";
+		};
+		3425BFBABB0FB0E03DB6708C /* Debug-dev */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -970,13 +1412,11 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = PayPayPay;
 			};
-			name = Debug;
+			name = "Debug-dev";
 		};
-		1591F94D24EBD8AE001AA4A7 /* Release */ = {
+		DB74A4D507AB7BEDEE5BB624 /* Debug-stg */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
@@ -990,11 +1430,81 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 6.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = PayPayPay;
 			};
-			name = Release;
+			name = "Debug-stg";
+		};
+		0A147B2427DED931DF834D84 /* Debug-pro */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 533H75UL22;
+				INFOPLIST_FILE = PayPayPayUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = PayPayPay;
+			};
+			name = "Debug-pro";
+		};
+		1AB743A868FD86AA53C1FC0A /* Release-dev */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 533H75UL22;
+				INFOPLIST_FILE = PayPayPayUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = PayPayPay;
+			};
+			name = "Release-dev";
+		};
+		B002A53CD9A8096E4D115B61 /* Release-stg */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 533H75UL22;
+				INFOPLIST_FILE = PayPayPayUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = PayPayPay;
+			};
+			name = "Release-stg";
+		};
+		C94449A55ABC659EC58452DE /* Release-pro */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 533H75UL22;
+				INFOPLIST_FILE = PayPayPayUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = PayPayPay;
+			};
+			name = "Release-pro";
 		};
 /* End XCBuildConfiguration section */
 
@@ -1002,38 +1512,54 @@
 		1591F91624EBD8AD001AA4A7 /* Build configuration list for PBXProject "PayPayPay" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1591F94324EBD8AE001AA4A7 /* Debug */,
-				1591F94424EBD8AE001AA4A7 /* Release */,
+				F4295E9B059149341A3E8435 /* Debug-dev */,
+				A336C96D80376007C8FA809F /* Debug-stg */,
+				257316F182852F81CF046A5C /* Debug-pro */,
+				AFE9E51DC2953B978308500E /* Release-dev */,
+				A919C64B84CF3F26B2B7D924 /* Release-stg */,
+				86C2902CD26AD862FA40748C /* Release-pro */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-pro";
 		};
 		1591F94524EBD8AE001AA4A7 /* Build configuration list for PBXNativeTarget "PayPayPay" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1591F94624EBD8AE001AA4A7 /* Debug */,
-				1591F94724EBD8AE001AA4A7 /* Release */,
+				84729995C1346D78728F43BA /* Debug-dev */,
+				B989F0288E216B384647A645 /* Debug-stg */,
+				1E1370B6FD1556D797911C6F /* Debug-pro */,
+				6935A8E985DD24D15AEE30B0 /* Release-dev */,
+				0121F1621D256855F0FACD17 /* Release-stg */,
+				1F2D94F6A4D7EE21A58F5737 /* Release-pro */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-pro";
 		};
 		1591F94824EBD8AE001AA4A7 /* Build configuration list for PBXNativeTarget "PayPayPayTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1591F94924EBD8AE001AA4A7 /* Debug */,
-				1591F94A24EBD8AE001AA4A7 /* Release */,
+				E2372DA1F9D9A8A216DE03F2 /* Debug-dev */,
+				7C6D2515323CBD90D3A3F783 /* Debug-stg */,
+				FC3F1E1E634C832C360B353A /* Debug-pro */,
+				C30605A8E0D5649CF8F5548E /* Release-dev */,
+				4CDC374752C0B7A5FDF74FF9 /* Release-stg */,
+				614E6692D59F121DD90F8F4F /* Release-pro */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-pro";
 		};
 		1591F94B24EBD8AE001AA4A7 /* Build configuration list for PBXNativeTarget "PayPayPayUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				1591F94C24EBD8AE001AA4A7 /* Debug */,
-				1591F94D24EBD8AE001AA4A7 /* Release */,
+				3425BFBABB0FB0E03DB6708C /* Debug-dev */,
+				DB74A4D507AB7BEDEE5BB624 /* Debug-stg */,
+				0A147B2427DED931DF834D84 /* Debug-pro */,
+				1AB743A868FD86AA53C1FC0A /* Release-dev */,
+				B002A53CD9A8096E4D115B61 /* Release-stg */,
+				C94449A55ABC659EC58452DE /* Release-pro */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-pro";
 		};
 /* End XCConfigurationList section */
 

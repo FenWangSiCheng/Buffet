@@ -8,11 +8,40 @@
 - 应用及测试 Target 最低支持 iOS 15；保留 `ObservableObject` / Combine 驱动 SwiftUI 更新。
 - 通过 Swift Package Manager 管理 Moya、Kingfisher，提交 `Package.resolved` 固定已验证的依赖版本。
 
-打开 `PayPayPay/PayPayPay.xcodeproj`，运行 `PayPayPay` scheme。
+打开 `PayPayPay/PayPayPay.xcodeproj`，选择 `dev`、`stg` 或 `pro` scheme。
+
+### dev / stg / pro 环境
+
+参考 SwiftModul 的 Project / Target 分层 xcconfig 配置，共享设置放在 Base 文件，环境差异放在各自文件中。
+
+| Scheme | 用途 | 桌面名称 | Bundle ID |
+| --- | --- | --- | --- |
+| `dev` | 开发 | 飞狼GO Dev | `cn.com.fenrir-inc.FenrirPay.dev` |
+| `stg` | 预发布 | 飞狼GO Stg | `cn.com.fenrir-inc.FenrirPay.stg` |
+| `pro` | 生产 | 飞狼GO | `cn.com.fenrir-inc.FenrirPay` |
+
+三个环境可同时安装，默认 UserDefaults 也随 Bundle ID 隔离。生产环境沿用原 Bundle ID。
+
+- 每个 Scheme 的 Run / Test / Analyze 使用 `Debug-环境`，Profile / Archive 使用 `Release-环境`，共六个 Build Configuration；应用、单元测试和 UI 测试 Target 均已同步。
+- `PayPayPay/PayPayPay/Resources/Configurations/Project/` 管理 Swift 版本、最低系统版本、`APP_ENVIRONMENT` 及 `DEV` / `STG` / `PRO` 编译条件；Debug 配置额外包含 `DEBUG`。
+- `PayPayPay/PayPayPay/Resources/Configurations/Targets/` 管理 Bundle ID、显示名称、版本号和 `API_BASE_URL`。URL 使用 `https:/$()/store/api` 写法，避免 `//` 被 xcconfig 当作注释。
+- `Info.plist` 注入构建变量，应用装配通过 `AppEnvironment.apiBaseURL` 读取地址；可通过 `AppEnvironment.current` 获取环境。
+- 三个环境暂时都使用原有示例地址 `https://store/api`，仍返回延迟样本数据。接入真实服务时，需要填写各环境真实地址并调整 `AppContainer` 中的 Moya stub 策略。
+- 真机运行 dev / stg 时，签名团队需要能为对应的新 Bundle ID 生成描述文件。原有第三方 URL 回调配置沿用，接入真实登录时需按平台登记信息配置。
+
+原来的 `Debug` / `Release` 配置已替换为带环境后缀的配置；命令行或 CI 请显式选择环境 Scheme。例如生产归档：
+
+```sh
+xcodebuild archive \
+  -project PayPayPay/PayPayPay.xcodeproj \
+  -scheme pro \
+  -destination 'generic/platform=iOS' \
+  -archivePath build/PayPayPay-pro.xcarchive
+```
 
 ### Swift 6 并发检查（2026-09-04）
 
-- 应用、单元测试、UI 测试 Target 的 Debug / Release 均已配置 `SWIFT_VERSION = 6.0`，严格并发检查由 Swift 6 语言模式启用。
+- 应用、单元测试、UI 测试 Target 的所有环境 Debug / Release 配置均使用 `SWIFT_VERSION = 6.0`，严格并发检查由 Swift 6 语言模式启用。
 - 当前没有启用默认 MainActor 隔离、Approachable Concurrency 或 `NonisolatedNonsendingByDefault`；未标注声明使用默认的 nonisolated 语义。UI 状态和请求生命周期显式由 `@MainActor` 管理，跨回调边界传递 `Sendable` 数据。
 - Moya 回调显式使用后台队列完成 JSON 解码，随后回到 MainActor 完成 continuation；回调标注 `@Sendable`，避免继承调用方的 actor 隔离。第三方依赖仍按各自 Package 的语言模式编译，不代表依赖源码也全部迁移到 Swift 6。
 - Toast 在实际展示时启动两秒关闭计时，消失时取消旧回调，支持页面出现后才到达的错误提示。沿用现有延迟工具。
@@ -34,6 +63,7 @@
 PayPayPay/PayPayPay/
 ├── Application/
 │   ├── AppDelegate.swift
+│   ├── AppEnvironment.swift
 │   ├── SceneDelegate.swift
 │   ├── DependencyInjection/AppContainer.swift
 │   ├── Previews/CatalogPreviews.swift
@@ -57,6 +87,7 @@ PayPayPay/PayPayPay/
 │   └── Shared/                   # Components、Extensions、Utilities
 └── Resources/
     ├── Assets.xcassets/
+    ├── Configurations/           # Project / Targets 分层环境配置
     ├── Base.lproj/
     ├── Fixtures/Products.json
     └── Preview Content/
@@ -106,7 +137,7 @@ python3 Scripts/check_architecture.py
 ```sh
 xcodebuild test \
   -project PayPayPay/PayPayPay.xcodeproj \
-  -scheme PayPayPay \
+  -scheme dev \
   -destination 'platform=iOS Simulator,id=<SIMULATOR_ID>' \
   -only-testing:PayPayPayTests \
   -only-testing:PayPayPayUITests/CatalogFlowUITests \
