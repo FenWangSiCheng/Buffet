@@ -1,0 +1,5 @@
+# Use SwiftLint's default rules; only limit the source directories.
+included:
+  - PayPayPay
+  - PayPayPayTests
+  - PayPayPayUITests

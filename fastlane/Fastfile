@@ -1,0 +1,93 @@
+# frozen_string_literal: true
+
+require "json"
+require "open3"
+require "shellwords"
+
+default_platform(:ios)
+opt_out_usage
+skip_docs # Usage is maintained in the repository README.
+
+platform :ios do
+  desc "Check Swift sources with SwiftLint's default rules"
+  lane :lint do
+    root = File.expand_path("..", __dir__)
+    swiftlint(config_file: File.join(root, ".swiftlint.yml"))
+  end
+
+  desc "Build dev IPA (debugging); pass unsigned:true for an unsigned archive"
+  lane :build_ios_develop do |options|
+    package_app(options.merge(scheme: "dev", default_method: "debugging"))
+  end
+
+  desc "Build stg IPA (debugging); export_method:release-testing for distribution"
+  lane :build_ios_staging do |options|
+    package_app(options.merge(scheme: "stg", default_method: "debugging"))
+  end
+
+  desc "Build pro IPA for App Store Connect; does not upload"
+  lane :build_ios_production do |options|
+    package_app(options.merge(scheme: "pro", default_method: "app-store-connect"))
+  end
+
+  private_lane :package_app do |options|
+    lint
+    root = File.expand_path("..", __dir__)
+    project = File.join(root, "PayPayPay.xcodeproj")
+    scheme = options.fetch(:scheme)
+    configuration = "Release-#{scheme}"
+    method = (options[:export_method] || options.fetch(:default_method)).to_s
+    supported_methods = %w[debugging release-testing app-store-connect enterprise]
+    UI.user_error!("export_method must be one of: #{supported_methods.join(', ')}") unless supported_methods.include?(method)
+    # Fastlane 2.238 accepts the legacy aliases that Xcode still supports.
+    gym_method = {
+      "debugging" => "development", "release-testing" => "ad-hoc",
+      "app-store-connect" => "app-store", "enterprise" => "enterprise"
+    }.fetch(method)
+    unsigned = options[:unsigned].to_s == "true"
+
+    settings_json, stderr, status = Open3.capture3(
+      "xcodebuild", "-project", project, "-scheme", scheme,
+      "-configuration", configuration, "-showBuildSettings", "-json",
+      "-destination", "generic/platform=iOS", "-disableAutomaticPackageResolution"
+    )
+    UI.user_error!("Cannot read build settings: #{stderr}") unless status.success?
+    target = JSON.parse(settings_json).find { |entry| entry["target"] == "PayPayPay" }
+    UI.user_error!("PayPayPay target is missing from #{scheme}") unless target
+    settings = target.fetch("buildSettings")
+    version = settings.fetch("MARKETING_VERSION")
+    build_number = settings.fetch("CURRENT_PROJECT_VERSION")
+    team = ENV.fetch("FASTLANE_TEAM_ID", settings.fetch("DEVELOPMENT_TEAM", ""))
+    UI.user_error!("Set FASTLANE_TEAM_ID or the Xcode signing team") if !unsigned && team.empty?
+
+    commit = last_git_commit.fetch(:abbreviated_commit_hash)
+    name = "PayPayPay_#{scheme}_v#{version}_#{build_number}_#{Time.now.strftime('%Y%m%d-%H%M%S')}_#{commit}"
+    output = File.join(root, "output", scheme)
+    xcargs = unsigned ? "CODE_SIGNING_ALLOWED=NO" : "DEVELOPMENT_TEAM=#{Shellwords.escape(team)}"
+
+    build_app(
+      project: project,
+      scheme: scheme,
+      configuration: configuration,
+      destination: "generic/platform=iOS",
+      clean: true,
+      archive_path: File.join(output, "#{name}.xcarchive"),
+      output_directory: output,
+      output_name: "#{name}.ipa",
+      buildlog_path: File.join(output, "logs"),
+      derived_data_path: File.join(root, "build", "DerivedData"),
+      disable_package_automatic_updates: true,
+      skip_codesigning: unsigned,
+      skip_package_ipa: unsigned,
+      skip_profile_detection: unsigned,
+      export_method: gym_method,
+      export_team_id: unsigned ? nil : team,
+      export_options: unsigned ? nil : {
+        signingStyle: "automatic",
+        destination: "export",
+        manageAppVersionAndBuildNumber: false
+      },
+      xcargs: xcargs
+    )
+  end
+end

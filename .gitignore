@@ -88,3 +88,10 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+
+# Bundler and local packaging output
+.bundle/
+vendor/bundle/
+output/
+fastlane/.env*
+!fastlane/.env.example

@@ -8,7 +8,69 @@
 - 应用及测试 Target 最低支持 iOS 15；保留 `ObservableObject` / Combine 驱动 SwiftUI 更新。
 - 通过 Swift Package Manager 管理 Moya、Kingfisher，提交 `Package.resolved` 固定已验证的依赖版本。
 
-打开 `PayPayPay/PayPayPay.xcodeproj`，选择 `dev`、`stg` 或 `pro` scheme。
+打开 `PayPayPay.xcodeproj`，选择 `dev`、`stg` 或 `pro` scheme。
+
+### Ruby 环境
+
+使用 rbenv 管理 Ruby，根目录的 `.ruby-version` 固定为 `4.0.6`。安装并初始化 rbenv 后，在仓库根目录执行：
+
+```sh
+rbenv install -s
+gem install bundler -v 4.0.20 --no-document
+bundle config set --local path vendor/bundle
+bundle install
+bundle exec fastlane lanes
+```
+
+进入项目目录后，rbenv 自动选择该版本。Bundler 管理 Fastlane，提交 `Gemfile.lock` 固定工具和间接依赖；iOS 三方依赖由 Swift Package Manager 管理。如果 `rbenv install` 找不到版本，先更新 ruby-build。
+
+截至 2026-09-04，使用官方最新稳定版 [Ruby 4.0.6](https://www.ruby-lang.org/en/downloads/)、[Bundler 4.0.20](https://rubygems.org/gems/bundler/versions/4.0.20)、[Fastlane 2.238.0](https://rubygems.org/gems/fastlane/versions/2.238.0)。间接依赖由 Bundler 在 Fastlane 的版本约束内解析，不使用预发布版本；后续升级需同步更新版本声明和锁文件并重新验证。
+
+### SwiftLint
+
+按 [SwiftLint 官方 Homebrew 安装方式](https://github.com/realm/SwiftLint#homebrew)安装：
+
+```sh
+brew install swiftlint
+swiftlint version
+bundle exec fastlane ios lint
+```
+
+已安装并验证最新稳定版 **0.65.1**（2026-09-04）。已有 Homebrew 安装可运行 `brew update && brew upgrade swiftlint` 升级。Homebrew 跟随稳定版更新，不锁定历史版本。
+
+`.swiftlint.yml` 使用官方默认规则及默认阈值，只检查 `PayPayPay`、`PayPayPayTests`、`PayPayPayUITests`。不启用额外 opt-in 规则，也不关闭默认规则。Fastlane 三个打包入口均先运行 lint，默认 error 会阻止打包，warning 保留为提示。
+
+已验证 47 个 Swift 文件全部通过检查，0 警告、0 错误，并通过现有单元测试。
+
+### Fastlane 打包
+
+在仓库根目录执行，三个入口均使用对应的 `Release-环境` 配置：
+
+```sh
+bundle exec fastlane ios build_ios_develop
+bundle exec fastlane ios build_ios_staging
+bundle exec fastlane ios build_ios_production
+```
+
+dev / stg 默认导出 `debugging` 开发包；pro 默认导出 `app-store-connect` 分发包。仅在本地归档、导出，不自动上传。产物位于 `output/<scheme>/`，IPA 和归档名称包含环境、版本号、构建号、时间及 Git 提交号；日志位于同目录的 `logs/`。
+
+版本号和构建号读取当前 Xcode 构建设置，由 `PayPayPay/Resources/Configurations/Targets/BaseTarget.xcconfig` 管理。导出时保留构建号。
+
+签名沿用工程的自动签名团队；本机需要配置相应证书及描述文件。可通过 `FASTLANE_TEAM_ID` 覆盖团队，并按分发用途指定导出方式：
+
+```sh
+FASTLANE_TEAM_ID=YOUR_TEAM_ID bundle exec fastlane ios build_ios_staging export_method:release-testing
+```
+
+支持 `debugging`、`release-testing`、`app-store-connect`、`enterprise`。Fastlane 2.238.0 的参数校验仍使用旧名称，配置内部映射为 Xcode 兼容的 `development`、`ad-hoc`、`app-store`、`enterprise`。没有签名环境时，可验证完整归档流程：
+
+```sh
+bundle exec fastlane ios build_ios_develop unsigned:true
+```
+
+`unsigned:true` 生成未签名 `.xcarchive`，不导出可安装 IPA。`vendor/bundle/`、`.bundle/` 和 `output/` 均已忽略。
+
+已于 2026-09-04 使用上述工具版本及 Xcode 26.1 完成 dev 未签名归档，核对归档 Bundle ID、版本号和构建号正确。三个环境的签名参数与分发方式切换已检查；签名 IPA 导出尚未验证。
 
 ### dev / stg / pro 环境
 
@@ -23,8 +85,8 @@
 三个环境可同时安装，默认 UserDefaults 也随 Bundle ID 隔离。生产环境沿用原 Bundle ID。
 
 - 每个 Scheme 的 Run / Test / Analyze 使用 `Debug-环境`，Profile / Archive 使用 `Release-环境`，共六个 Build Configuration；应用、单元测试和 UI 测试 Target 均已同步。
-- `PayPayPay/PayPayPay/Resources/Configurations/Project/` 管理 Swift 版本、最低系统版本、`APP_ENVIRONMENT` 及 `DEV` / `STG` / `PRO` 编译条件；Debug 配置额外包含 `DEBUG`。
-- `PayPayPay/PayPayPay/Resources/Configurations/Targets/` 管理 Bundle ID、显示名称、版本号和 `API_BASE_URL`。URL 使用 `https:/$()/store/api` 写法，避免 `//` 被 xcconfig 当作注释。
+- `PayPayPay/Resources/Configurations/Project/` 管理 Swift 版本、最低系统版本、`APP_ENVIRONMENT` 及 `DEV` / `STG` / `PRO` 编译条件；Debug 配置额外包含 `DEBUG`。
+- `PayPayPay/Resources/Configurations/Targets/` 管理 Bundle ID、显示名称、版本号和 `API_BASE_URL`。URL 使用 `https:/$()/store/api` 写法，避免 `//` 被 xcconfig 当作注释。
 - `Info.plist` 注入构建变量，应用装配通过 `AppEnvironment.apiBaseURL` 读取地址；可通过 `AppEnvironment.current` 获取环境。
 - 三个环境暂时都使用原有示例地址 `https://store/api`，仍返回延迟样本数据。接入真实服务时，需要填写各环境真实地址并调整 `AppContainer` 中的 Moya stub 策略。
 - 真机运行 dev / stg 时，签名团队需要能为对应的新 Bundle ID 生成描述文件。原有第三方 URL 回调配置沿用，接入真实登录时需按平台登记信息配置。
@@ -33,7 +95,7 @@
 
 ```sh
 xcodebuild archive \
-  -project PayPayPay/PayPayPay.xcodeproj \
+  -project PayPayPay.xcodeproj \
   -scheme pro \
   -destination 'generic/platform=iOS' \
   -archivePath build/PayPayPay-pro.xcarchive
@@ -60,7 +122,7 @@ xcodebuild archive \
 物理文件夹与 Xcode 分组保持一致：
 
 ```text
-PayPayPay/PayPayPay/
+PayPayPay/
 ├── Application/
 │   ├── AppDelegate.swift
 │   ├── AppEnvironment.swift
@@ -92,7 +154,7 @@ PayPayPay/PayPayPay/
     ├── Fixtures/Products.json
     └── Preview Content/
 
-PayPayPay/PayPayPayTests/
+PayPayPayTests/
 ├── Domain/
 ├── Data/
 ├── Presentation/
@@ -106,7 +168,7 @@ PayPayPay/PayPayPayTests/
 - **Presentation** 负责页面状态与用户意图。`CatalogViewModel` 通过注入的 Use Case 工作；首页和购物车共享同一实例，避免两套状态不一致。View 不能直接修改 `CatalogState`。
 - **Application** 是 composition root。`AppContainer` 创建具体仓储并注入 Use Case、ViewModel；`SceneDelegate` 持有页面生命周期，断开场景时取消加载。Preview 也在这里装配，使用独立的 UserDefaults suite。
 
-目前仍是单一应用 Target，没有额外引入 SPM 业务模块。`Scripts/check_architecture.py` 检查跨层类型引用，并单独用 Swift 6 编译检查 Domain；它是轻量边界检查，不替代独立模块的编译器访问控制。
+目前仍是单一应用 Target，没有额外引入 SPM 业务模块。
 
 ## 命名规范
 
@@ -126,17 +188,11 @@ PayPayPay/PayPayPayTests/
 
 ## 验证
 
-在仓库根目录运行边界检查：
-
-```sh
-python3 Scripts/check_architecture.py
-```
-
 在 Xcode 中运行 `PayPayPayTests` 与 `CatalogFlowUITests`，或将下面的 `<SIMULATOR_ID>` 替换为本机可用模拟器 ID：
 
 ```sh
 xcodebuild test \
-  -project PayPayPay/PayPayPay.xcodeproj \
+  -project PayPayPay.xcodeproj \
   -scheme dev \
   -destination 'platform=iOS Simulator,id=<SIMULATOR_ID>' \
   -only-testing:PayPayPayTests \
