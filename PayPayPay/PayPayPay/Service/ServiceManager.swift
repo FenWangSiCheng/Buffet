@@ -9,19 +9,8 @@
 import Foundation
 import Moya
 
-let serviceManager = ServiceManager.shared
-
-class ServiceManager {
-    
-    internal let networking: Network
-    internal init(networking: Network) {
-        self.networking = networking
-    }
-    
-    static let shared = ServiceManager(networking: Network.instance)
-    
-    lazy var homeService: HomeService = HomeService(networking: networking)
-
-    lazy var mySettingService: MySettingService = MySettingService(networking: networking)
-    
+@MainActor
+final class ServiceManager {
+    static let shared = ServiceManager()
+    private init() {}
 }

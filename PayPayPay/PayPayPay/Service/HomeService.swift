@@ -10,17 +10,28 @@ import Foundation
 import Combine
 import Moya
 
-class HomeService {
-    
-    let networking: Network!
-    
-    init(networking: Network) {
-        self.networking = networking
-    }
+@MainActor
+protocol ProductRepository {
+    func fetchProducts(page: Int) async throws -> [ProductInfoModel]
+}
 
-    func getAllProducts(page: Int) -> AnyPublisher<[ProductInfoModel], NetworkError> {
-        let parameters = [APIConst.getAllProducts: page]
-        return networking
-            .request(.getAllProducts(parameters: parameters))
+@MainActor
+final class ProductRepositoryImpl: ProductRepository {
+    private let network: Network
+    init(network: Network = .instance) { self.network = network }
+    func fetchProducts(page: Int) async throws -> [ProductInfoModel] {
+        try await withCheckedThrowingContinuation { continuation in
+            network.request(.getAllProducts(parameters: [APIConst.getAllProducts: page]))
+                .sink(receiveCompletion: { completion in
+                    if case .failure(let error) = completion { continuation.resume(throwing: error) }
+                }, receiveValue: { products in continuation.resume(returning: products) })
+                .store(in: &CancellableBox.shared.values)
+        }
     }
+}
+
+@MainActor
+private final class CancellableBox {
+    static let shared = CancellableBox()
+    var values = Set<AnyCancellable>()
 }

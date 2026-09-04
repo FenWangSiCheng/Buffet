@@ -21,7 +21,8 @@ private func JSONResponseDataFormatter(_ data: Data) -> String {
     }
 }
 
-public class Network {
+@MainActor
+public final class Network {
     
     private var provider: MoyaProvider<NetworkTarget>!
 

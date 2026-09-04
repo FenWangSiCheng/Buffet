@@ -8,19 +8,25 @@
 import Foundation
 import Combine
 
+@MainActor
 class Store: ObservableObject {
     @Published var appState = AppState()
 
-    private var disposeBag = Set<AnyCancellable>()
+    private let productRepository: ProductRepository
+    private let cartRepository: CartRepository
 
-    init() {
+    init(productRepository: ProductRepository = ProductRepositoryImpl(),
+         cartRepository: CartRepository = CartRepositoryImpl()) {
+        self.productRepository = productRepository
+        self.cartRepository = cartRepository
     }
 
     func dispatch(_ action: AppAction) {
         #if DEBUG
         print("[ACTION]: \(action)")
         #endif
-        let result = Store.reduce(state: appState, action: action)
+        let result = Store.reduce(state: appState, action: action, cartRepository: cartRepository,
+                                  productRepository: productRepository)
         appState = result.0
         if let command = result.1 {
             #if DEBUG
@@ -30,7 +36,9 @@ class Store: ObservableObject {
         }
     }
 
-    static func reduce(state: AppState, action: AppAction) -> (AppState, AppCommand?) {
+    static func reduce(state: AppState, action: AppAction,
+                       cartRepository: CartRepository = CartRepositoryImpl(),
+                       productRepository: ProductRepository = ProductRepositoryImpl()) -> (AppState, AppCommand?) {
         var appState = state
         var appCommand: AppCommand?
 
@@ -40,12 +48,18 @@ class Store: ObservableObject {
                 break
             }
             appState.goodList.loadingGoods = true
-            appCommand = LoadGoodsCommand()
+            appCommand = LoadGoodsCommand(repository: productRepository)
         case .loadGoodssDone(result: let result):
             appState.goodList.loadingGoods = false
             switch result {
             case .success(let models):
-                appState.goodList.goods = models
+                appState.goodList.goods = models.map { model in
+                    var model = model
+                    let id = model.id ?? ""
+                    model.shopCarCount = cartRepository.count(for: id)
+                    model.isSelected = cartRepository.isSelected(for: id)
+                    return model
+                }
                 appState.goodList.netWorkError = nil
                 appState.goodList.isShowError = false
             case .failure(let error):
@@ -55,19 +69,25 @@ class Store: ObservableObject {
         case .addShopCar(let model):
             if let indices = appState.goodList.goods?.indices(of: model) {
                 indices.forEach { (index) in
-                    appState.goodList.goods?[index].shopCarCount += 1
+                    let product = appState.goodList.goods![index]
+                    cartRepository.setCount(cartRepository.count(for: product.id ?? "") + 1, for: product.id ?? "")
+                    appState.goodList.goods?[index].shopCarCount = cartRepository.count(for: product.id ?? "")
                 }
             }
         case .subShopCar(let model):
             if let indices = appState.goodList.goods?.indices(of: model) {
                 indices.forEach { (index) in
-                    appState.goodList.goods?[index].shopCarCount -= 1
+                    let product = appState.goodList.goods![index]
+                    cartRepository.setCount(cartRepository.count(for: product.id ?? "") - 1, for: product.id ?? "")
+                    appState.goodList.goods?[index].shopCarCount = cartRepository.count(for: product.id ?? "")
                 }
             }
         case .selectedGood(let model):
 
             if let indices = appState.goodList.goods?.indices(of: model) {
                 indices.forEach { (index) in
+                    let id = appState.goodList.goods![index].id ?? ""
+                    cartRepository.setSelected(true, for: id)
                     appState.goodList.goods?[index].isSelected = true
                 }
             }
@@ -75,6 +95,8 @@ class Store: ObservableObject {
         case .canceledGood(let model):
             if let indices = appState.goodList.goods?.indices(of: model) {
                 indices.forEach { (index) in
+                    let id = appState.goodList.goods![index].id ?? ""
+                    cartRepository.setSelected(false, for: id)
                     appState.goodList.goods?[index].isSelected = false
                 }
             }
@@ -86,6 +108,7 @@ class Store: ObservableObject {
             let models =  appState.goodList.goods!.map { (model) -> ProductInfoModel in
                 var newModel = model
                 if model.shopCarCount > 0 {
+                    cartRepository.setSelected(true, for: newModel.id ?? "")
                     newModel.isSelected = true
                 }
                 return newModel
@@ -98,6 +121,7 @@ class Store: ObservableObject {
             let models =  appState.goodList.goods!.map { (model) -> ProductInfoModel in
                 var newModel = model
                 if model.shopCarCount > 0 {
+                    cartRepository.setSelected(false, for: newModel.id ?? "")
                     newModel.isSelected = false
                 }
                 return newModel
@@ -110,6 +134,7 @@ class Store: ObservableObject {
             let models =  appState.goodList.goods!.map { (model) -> ProductInfoModel in
                 var newModel = model
                 if newModel.isSelected && newModel.shopCarCount > 0 {
+                    cartRepository.setCount(0, for: newModel.id ?? "")
                     newModel.shopCarCount = 0
                     newModel.isSelected = false
                 }
@@ -140,7 +165,7 @@ class Store: ObservableObject {
                 break
             }
             appState.goodList.loadingGoods = true
-            appCommand = LoadGoodsCommand()
+            appCommand = LoadGoodsCommand(repository: productRepository)
         case .loadeRechargeDone(result: let result):
             appState.goodList.loadingGoods = false
             switch result {
@@ -158,4 +183,3 @@ class Store: ObservableObject {
     }
 
 }
-

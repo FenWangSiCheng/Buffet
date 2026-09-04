@@ -11,24 +11,24 @@ import SwiftUI
 import Combine
 import Moya
 
+@MainActor
 protocol AppCommand {
     func execute(in store: Store)
 }
 
 struct LoadGoodsCommand: AppCommand {
+    let repository: ProductRepository
 
     func execute(in store: Store) {
-        let token = SubscriptionToken()
-        ServiceManager.shared.homeService.getAllProducts(page: 0)
-            .sink(receiveCompletion: { (complete) in
-                if case .failure(let error) = complete {
-                    store.dispatch(.loadGoodssDone(result: .failure(error)))
-                }
-                token.unseal()
-            }, receiveValue: { (value) in
-                store.dispatch(.loadGoodssDone(result: .success(value)))
-            })
-            .seal(in: token)
+        _Concurrency.Task { @MainActor in
+            do {
+                store.dispatch(.loadGoodssDone(result: .success(try await repository.fetchProducts(page: 0))))
+            } catch let error as NetworkError {
+                store.dispatch(.loadGoodssDone(result: .failure(error)))
+            } catch {
+                store.dispatch(.loadGoodssDone(result: .failure(.unknown)))
+            }
+        }
     }
 }
 

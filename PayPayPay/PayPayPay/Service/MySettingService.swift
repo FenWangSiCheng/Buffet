@@ -10,12 +10,20 @@ import UIKit
 import Combine
 import Moya
 
-class MySettingService {
+@MainActor
+protocol CartRepository {
+    func count(for productID: String) -> Int
+    func setCount(_ count: Int, for productID: String)
+    func isSelected(for productID: String) -> Bool
+    func setSelected(_ selected: Bool, for productID: String)
+}
 
-    let networking: Network!
-
-    init(networking: Network) {
-        self.networking = networking
-    }
-    
+@MainActor
+final class CartRepositoryImpl: CartRepository {
+    private let defaults: UserDefaults
+    init(defaults: UserDefaults = .standard) { self.defaults = defaults }
+    func count(for productID: String) -> Int { defaults.integer(forKey: "cart.count.\(productID)") }
+    func setCount(_ count: Int, for productID: String) { defaults.set(max(0, count), forKey: "cart.count.\(productID)") }
+    func isSelected(for productID: String) -> Bool { defaults.bool(forKey: "cart.selected.\(productID)") }
+    func setSelected(_ selected: Bool, for productID: String) { defaults.set(selected, forKey: "cart.selected.\(productID)") }
 }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CommonTools: NSObject {
+final class CommonTools: NSObject, Sendable {
     
     public static let shareInstance: CommonTools = CommonTools()
     

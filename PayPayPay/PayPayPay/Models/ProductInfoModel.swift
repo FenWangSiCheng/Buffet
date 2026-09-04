@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Domain product value. Persistence belongs to CartRepository, not this model.
 struct ProductInfoModel: Equatable, Codable, Identifiable {
 
     public var id: String?
@@ -24,24 +25,8 @@ struct ProductInfoModel: Equatable, Codable, Identifiable {
 
     public var barcode: String?
 
-    public var shopCarCount: Int {
-        get {
-            return UserDefaults.standard.integer(forKey: self.id!)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: self.id!)
-        }
-
-    }
-
-    public var isSelected: Bool {
-        get {
-            return UserDefaults.standard.bool(forKey: self.id! + goodSelectedKey)
-        }
-        set {
-            UserDefaults.standard.set(newValue, forKey: self.id! + goodSelectedKey)
-        }
-    }
+    public var shopCarCount: Int = 0
+    public var isSelected: Bool = false
 
     private enum CodingKeys: String, CodingKey {
         case id
