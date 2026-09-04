@@ -1,194 +1,130 @@
 # Buffet
 
-使用 SwiftUI 展示商品列表和购物车的 iOS 示例项目，按 Clean Architecture 分层，展示层采用 MVVM。
+[![iOS dev Build](https://github.com/FenWangSiCheng/Buffet/actions/workflows/ios.yml/badge.svg?branch=main&event=push)](https://github.com/FenWangSiCheng/Buffet/actions/workflows/ios.yml)
 
-## 开发环境
+一个使用 SwiftUI 构建的 iOS 商品列表与购物车示例。项目按 Clean Architecture 分层，展示层采用 MVVM，通过 Swift 6、async/await 和显式 MainActor 隔离管理界面状态与异步请求。
 
-- Xcode 16 或更新版本，Swift 6 语言模式。
-- 应用及测试 Target 最低支持 iOS 15；保留 `ObservableObject` / Combine 驱动 SwiftUI 更新。
-- 通过 Swift Package Manager 管理 Moya、Kingfisher，提交 `Package.resolved` 固定已验证的依赖版本。
+仓库名称为 **Buffet**，Xcode 工程及应用 Target 名称为 **PayPayPay**。
 
-打开 `PayPayPay.xcodeproj`，选择 `dev`、`stg` 或 `pro` scheme。
+## 功能与范围
 
-### Ruby 环境
+- 商品列表展示、按名称搜索、商品图片加载。
+- 购物车数量增减、单选与全选、删除选中商品、选中金额计算。
+- 首页与购物车共享状态，Tab 徽章显示购物车中的商品种类数。
+- 使用 UserDefaults 保存购物车数量和选中状态，重新启动后恢复。
+- 加载指示、错误 Toast、请求取消与重复加载控制。
 
-使用 rbenv 管理 Ruby，根目录的 `.ruby-version` 固定为 `4.0.6`。安装并初始化 rbenv 后，在仓库根目录执行：
+当前商品数据来自 `PayPayPay/Resources/Fixtures/Products.json`，由 Moya 延迟 3 秒返回。三个环境都使用示例地址 `https://store/api`，尚未接入真实后端。扫码和付款为界面占位；登录、充值仅保留相关 DTO，没有完整业务流程。
 
-```sh
-rbenv install -s
-gem install bundler -v 4.0.20 --no-document
-bundle config set --local path vendor/bundle
-bundle install
-bundle exec fastlane lanes
-```
+## 快速开始
 
-进入项目目录后，rbenv 自动选择该版本。Bundler 管理 Fastlane，提交 `Gemfile.lock` 固定工具和间接依赖；iOS 三方依赖由 Swift Package Manager 管理。如果 `rbenv install` 找不到版本，先更新 ruby-build。
+本地已使用 **Xcode 26.1** 验证 `dev` 的 Release 编译。工程使用 **Swift 6 语言模式**，最低部署版本为 **iOS 15**，支持 iPhone 和 iPad。
 
-截至 2026-09-04，使用官方最新稳定版 [Ruby 4.0.6](https://www.ruby-lang.org/en/downloads/)、[Bundler 4.0.20](https://rubygems.org/gems/bundler/versions/4.0.20)、[Fastlane 2.238.0](https://rubygems.org/gems/fastlane/versions/2.238.0)。间接依赖由 Bundler 在 Fastlane 的版本约束内解析，不使用预发布版本；后续升级需同步更新版本声明和锁文件并重新验证。
+1. 克隆仓库并打开工程：
 
-### SwiftLint
+   ```sh
+   git clone https://github.com/FenWangSiCheng/Buffet.git
+   cd Buffet
+   open PayPayPay.xcodeproj
+   ```
 
-按 [SwiftLint 官方 Homebrew 安装方式](https://github.com/realm/SwiftLint#homebrew)安装：
+2. 等待 Xcode 通过 Swift Package Manager 解析依赖。
+3. 选择 `dev` Scheme 和一个 iOS 模拟器，按 `⌘R` 运行。
 
-```sh
-brew install swiftlint
-swiftlint version
-bundle exec fastlane ios lint
-```
+模拟器运行不需要配置 Apple 签名证书。真机运行需在 Xcode 中设置可用的签名团队和描述文件。Ruby、Fastlane 和 SwiftLint 用于下文的检查与打包流程，直接在 Xcode 中运行无需先安装这些工具。
 
-已安装并验证最新稳定版 **0.65.1**（2026-09-04）。已有 Homebrew 安装可运行 `brew update && brew upgrade swiftlint` 升级。Homebrew 跟随稳定版更新，不锁定历史版本。
+### 命令行编译
 
-`.swiftlint.yml` 使用官方默认规则及默认阈值，只检查 `PayPayPay`、`PayPayPayTests`、`PayPayPayUITests`。不启用额外 opt-in 规则，也不关闭默认规则。Fastlane 三个打包入口均先运行 lint，默认 error 会阻止打包，warning 保留为提示。
-
-已验证 47 个 Swift 文件全部通过检查，0 警告、0 错误，并通过现有单元测试。
-
-### Fastlane 打包
-
-在仓库根目录执行，三个入口均使用对应的 `Release-环境` 配置：
+在仓库根目录执行，与 CI 使用相同的构建参数：
 
 ```sh
-bundle exec fastlane ios build_ios_develop
-bundle exec fastlane ios build_ios_staging
-bundle exec fastlane ios build_ios_production
+xcodebuild build \
+  -project PayPayPay.xcodeproj \
+  -scheme dev \
+  -configuration Release-dev \
+  -destination 'generic/platform=iOS' \
+  -onlyUsePackageVersionsFromResolvedFile \
+  CODE_SIGNING_ALLOWED=NO
 ```
 
-dev / stg 默认导出 `debugging` 开发包；pro 默认导出 `app-store-connect` 分发包。仅在本地归档、导出，不自动上传。产物位于 `output/<scheme>/`，IPA 和归档名称包含环境、版本号、构建号、时间及 Git 提交号；日志位于同目录的 `logs/`。
+该命令验证面向 iOS 真机的未签名编译，不生成可安装的 IPA。
 
-版本号和构建号读取当前 Xcode 构建设置，由 `PayPayPay/Resources/Configurations/Targets/BaseTarget.xcconfig` 管理。导出时保留构建号。
+## 持续集成
 
-签名沿用工程的自动签名团队；本机需要配置相应证书及描述文件。可通过 `FASTLANE_TEAM_ID` 覆盖团队，并按分发用途指定导出方式：
+[GitHub Actions](https://github.com/FenWangSiCheng/Buffet/actions/workflows/ios.yml) 在每次 push 后运行，也支持手动触发。配置位于 [`.github/workflows/ios.yml`](.github/workflows/ios.yml)。
 
-```sh
-FASTLANE_TEAM_ID=YOUR_TEAM_ID bundle exec fastlane ios build_ios_staging export_method:release-testing
+| 项目 | 当前配置 |
+| --- | --- |
+| 构建环境 | `macos-26` runner 提供的默认 Xcode，版本输出到日志 |
+| 编译目标 | `dev` Scheme / `Release-dev` |
+| 依赖 | 使用已提交的 `Package.resolved` 中的版本 |
+| 签名 | 关闭，无需 Apple 证书 |
+| 检查范围 | 仅编译；不运行测试、SwiftLint 或 IPA 导出 |
+
+README 顶部徽章显示 **main 分支最近一次 push** 的构建结果：成功为 `passing`，失败为 `failing`。其他分支也会触发编译，但不会改变此徽章对应的分支。点击徽章可查看日志；工作流推送并首次运行后才会有结果。
+
+## 代码结构
+
+```text
+PayPayPay/
+├── Application/           # 应用生命周期、环境读取、依赖装配、Preview
+├── Domain/
+│   ├── Entities/          # Product、CartItem
+│   ├── Errors/            # 业务错误
+│   ├── Repositories/      # 仓储协议
+│   └── UseCases/          # 加载商品、管理购物车
+├── Data/
+│   ├── DTOs/              # 网络数据结构
+│   ├── Networking/        # Moya 请求、解码、取消与错误转换
+│   └── Repositories/      # 商品仓储、UserDefaults 购物车仓储
+├── Presentation/
+│   ├── Products/          # 商品状态、Action、ViewModel、视图
+│   ├── Cart/              # 购物车视图
+│   ├── Navigation/        # Tab 导航
+│   └── Shared/            # 通用组件、扩展与工具
+└── Resources/             # 图片、配置、启动页与样本数据
+PayPayPayTests/            # Domain、Data、Presentation 单元测试
+PayPayPayUITests/          # 商品流程与启动性能 UI 测试
+fastlane/                  # lint 与三环境打包入口
 ```
 
-支持 `debugging`、`release-testing`、`app-store-connect`、`enterprise`。Fastlane 2.238.0 的参数校验仍使用旧名称，配置内部映射为 Xcode 兼容的 `development`、`ad-hoc`、`app-store`、`enterprise`。没有签名环境时，可验证完整归档流程：
+依赖方向为 `Presentation → Domain ← Data`，由 `Application/AppContainer` 装配具体实现。目前业务代码位于单个应用 Target，尚未拆分为独立 Package。
 
-```sh
-bundle exec fastlane ios build_ios_develop unsigned:true
-```
+`CatalogViewModel` 使用 `ObservableObject` / Combine 驱动 SwiftUI 更新；视图通过 Action 发起操作，购物车规则由 Use Case 处理。首页与购物车共享同一个 ViewModel。网络层将 Moya 回调桥接为 async/await，在后台解码，并通过 MainActor 更新界面状态。
 
-`unsigned:true` 生成未签名 `.xcarchive`，不导出可安装 IPA。`vendor/bundle/`、`.bundle/` 和 `output/` 均已忽略。
+## 环境配置
 
-已于 2026-09-04 使用上述工具版本及 Xcode 26.1 完成 dev 未签名归档，核对归档 Bundle ID、版本号和构建号正确。三个环境的签名参数与分发方式切换已检查；签名 IPA 导出尚未验证。
-
-### dev / stg / pro 环境
-
-参考 SwiftModul 的 Project / Target 分层 xcconfig 配置，共享设置放在 Base 文件，环境差异放在各自文件中。
-
-| Scheme | 用途 | 桌面名称 | Bundle ID |
+| Scheme | 用途 | 应用显示名称 | Bundle ID |
 | --- | --- | --- | --- |
 | `dev` | 开发 | 飞狼GO Dev | `cn.com.fenrir-inc.FenrirPay.dev` |
 | `stg` | 预发布 | 飞狼GO Stg | `cn.com.fenrir-inc.FenrirPay.stg` |
 | `pro` | 生产 | 飞狼GO | `cn.com.fenrir-inc.FenrirPay` |
 
-三个环境可同时安装，默认 UserDefaults 也随 Bundle ID 隔离。生产环境沿用原 Bundle ID。
+三个环境可同时安装，UserDefaults 随各自 Bundle ID 隔离。每个 Scheme 的 Run / Test / Analyze 使用 `Debug-环境`，Profile / Archive 使用 `Release-环境`。
 
-- 每个 Scheme 的 Run / Test / Analyze 使用 `Debug-环境`，Profile / Archive 使用 `Release-环境`，共六个 Build Configuration；应用、单元测试和 UI 测试 Target 均已同步。
-- `PayPayPay/Resources/Configurations/Project/` 管理 Swift 版本、最低系统版本、`APP_ENVIRONMENT` 及 `DEV` / `STG` / `PRO` 编译条件；Debug 配置额外包含 `DEBUG`。
-- `PayPayPay/Resources/Configurations/Targets/` 管理 Bundle ID、显示名称、版本号和 `API_BASE_URL`。URL 使用 `https:/$()/store/api` 写法，避免 `//` 被 xcconfig 当作注释。
-- `Info.plist` 注入构建变量，应用装配通过 `AppEnvironment.apiBaseURL` 读取地址；可通过 `AppEnvironment.current` 获取环境。
-- 三个环境暂时都使用原有示例地址 `https://store/api`，仍返回延迟样本数据。接入真实服务时，需要填写各环境真实地址并调整 `AppContainer` 中的 Moya stub 策略。
-- 真机运行 dev / stg 时，签名团队需要能为对应的新 Bundle ID 生成描述文件。原有第三方 URL 回调配置沿用，接入真实登录时需按平台登记信息配置。
+- `Resources/Configurations/Project/`：Swift 版本、最低系统版本、环境标识与编译条件。
+- `Resources/Configurations/Targets/`：Bundle ID、显示名称、API 地址；`BaseTarget.xcconfig` 统一管理版本号与构建号。
+- `Application/AppEnvironment.swift`：读取 Info.plist 注入的环境和 API 地址。
 
-原来的 `Debug` / `Release` 配置已替换为带环境后缀的配置；命令行或 CI 请显式选择环境 Scheme。例如生产归档：
+接入真实服务时，修改各环境的 `API_BASE_URL`，并调整 `AppContainer` 中的 `MoyaProvider.delayedStub(3)`。xcconfig 中的 URL 写作 `https:/$()/store/api`，用于避免 `//` 被解析为注释。
 
-```sh
-xcodebuild archive \
-  -project PayPayPay.xcodeproj \
-  -scheme pro \
-  -destination 'generic/platform=iOS' \
-  -archivePath build/PayPayPay-pro.xcarchive
-```
+## 依赖
 
-### Swift 6 并发检查（2026-09-04）
+iOS 依赖由 Swift Package Manager 管理，锁文件位于 `PayPayPay.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`。
 
-- 应用、单元测试、UI 测试 Target 的所有环境 Debug / Release 配置均使用 `SWIFT_VERSION = 6.0`，严格并发检查由 Swift 6 语言模式启用。
-- 当前没有启用默认 MainActor 隔离、Approachable Concurrency 或 `NonisolatedNonsendingByDefault`；未标注声明使用默认的 nonisolated 语义。UI 状态和请求生命周期显式由 `@MainActor` 管理，跨回调边界传递 `Sendable` 数据。
-- Moya 回调显式使用后台队列完成 JSON 解码，随后回到 MainActor 完成 continuation；回调标注 `@Sendable`，避免继承调用方的 actor 隔离。第三方依赖仍按各自 Package 的语言模式编译，不代表依赖源码也全部迁移到 Swift 6。
-- Toast 在实际展示时启动两秒关闭计时，消失时取消旧回调，支持页面出现后才到达的错误提示。沿用现有延迟工具。
-- 本次使用 Xcode 26.1 / Swift 6.2.1 验证；未引入仅 Swift 6.2 可用的语法。新增后台解码及延迟出现 Toast 的回归测试。
+| 依赖 | 锁定版本 | 用途 |
+| --- | --- | --- |
+| Moya | 15.0.3 | 请求封装与样本响应 |
+| Kingfisher | 8.12.0 | SwiftUI 图片加载 |
+| Alamofire | 5.12.0 | Moya 底层网络依赖 |
+| RxSwift | 6.10.2 | Moya 可选响应式产品依赖 |
+| ReactiveSwift | 6.7.0 | Moya 可选响应式产品依赖 |
 
-### 三方依赖更新（2026-09-04）
+应用直接链接 Moya 和 Kingfisher，业务代码未直接使用 RxSwift 或 ReactiveSwift。更新依赖时同步提交 `Package.resolved`。
 
-- Moya：`15.0.0-alpha.1` → `15.0.3`（正式版）。
-- Kingfisher：`5.15.0` → `8.12.0`；SwiftUI 图片组件改为使用统一的 `Kingfisher` 产品与模块。最低系统版本统一为 iOS 15，直接使用 `KFImage`。
-- Alamofire：`5.2.2` → `5.12.0`；RxSwift：`5.1.1` → `6.10.2`。
-- ReactiveSwift：从 Moya fork `6.1.0` 切换到官方上游 `6.7.0`。Moya 15.0.3 的依赖声明限制在 `6.x`，因此采用该范围内最新稳定版，不能直接解析到上游 `7.2.1`。
-- 应用仅链接 Moya 和 Kingfisher；RxSwift、ReactiveSwift 属于 Moya 包的可选响应式产品依赖，业务代码未直接使用。
+## 测试
 
-## 目录与职责
-
-物理文件夹与 Xcode 分组保持一致：
-
-```text
-PayPayPay/
-├── Application/
-│   ├── AppDelegate.swift
-│   ├── AppEnvironment.swift
-│   ├── SceneDelegate.swift
-│   ├── DependencyInjection/AppContainer.swift
-│   ├── Previews/CatalogPreviews.swift
-│   └── Info.plist
-├── Domain/
-│   ├── Entities/                 # Product、CartItem
-│   ├── Errors/                   # 与框架无关的 RepositoryError
-│   ├── Repositories/             # ProductRepository、CartRepository 协议
-│   └── UseCases/                 # LoadProductsUseCase、ManageCartUseCase
-├── Data/
-│   ├── DTOs/                     # API 字段及 ProductDTO → Product 映射
-│   ├── Networking/               # Moya 请求、取消和错误转换
-│   └── Repositories/             # RemoteProductRepository、UserDefaultsCartRepository
-├── Presentation/
-│   ├── Products/
-│   │   ├── Models/               # CatalogState、CatalogAction、商品显示格式
-│   │   ├── ViewModels/            # CatalogViewModel
-│   │   └── Views/                # ProductListView、ProductRowView
-│   ├── Cart/Views/               # CartView、CartRowView、CartSummaryView
-│   ├── Navigation/               # MainTabView
-│   └── Shared/                   # Components、Extensions、Utilities
-└── Resources/
-    ├── Assets.xcassets/
-    ├── Configurations/           # Project / Targets 分层环境配置
-    ├── Base.lproj/
-    ├── Fixtures/Products.json
-    └── Preview Content/
-
-PayPayPayTests/
-├── Domain/
-├── Data/
-├── Presentation/
-└── Support/                      # 内存仓储、可控异步仓储
-```
-
-依赖方向为 `Presentation → Domain ← Data`，`Application` 负责装配三者。
-
-- **Domain** 只定义商品、购物车、仓储契约和业务规则，不引用 SwiftUI、Moya、UserDefaults 或 DTO。数量下限、选中规则、删除和加载后恢复购物车都由 Use Case 处理。
-- **Data** 实现 Domain 的仓储协议。JSON 字段名、图片地址拼接、HTTP 状态码和存储键留在这一层。网络回调桥接到 async/await，每个请求单独管理取消与 continuation。
-- **Presentation** 负责页面状态与用户意图。`CatalogViewModel` 通过注入的 Use Case 工作；首页和购物车共享同一实例，避免两套状态不一致。View 不能直接修改 `CatalogState`。
-- **Application** 是 composition root。`AppContainer` 创建具体仓储并注入 Use Case、ViewModel；`SceneDelegate` 持有页面生命周期，断开场景时取消加载。Preview 也在这里装配，使用独立的 UserDefaults suite。
-
-目前仍是单一应用 Target，没有额外引入 SPM 业务模块。
-
-## 命名规范
-
-- 实体使用业务名：`Product`、`CartItem`，不带通用 `Model` 后缀。
-- 业务操作使用 `…UseCase`；仓储协议使用 `…Repository`；具体实现说明技术或来源，例如 `UserDefaultsCartRepository`。
-- 网络载荷使用 `…DTO`，页面使用 `…View`，展示逻辑使用 `…ViewModel`。
-- 扩展文件使用 `类型+职责.swift`，例如 `CartItem+Presentation.swift`。
-- 页面按 Products、Cart 等功能归类，避免再增加含义模糊的 `Service`、`Utils`、`DataFlow` 文件夹。
-
-## 行为与迁移范围
-
-商品展示、搜索、购物车增减、单选／全选、删除和总价计算均沿用原有交互。商品与购物车状态拆分后，持久化仍使用 `cart.count.<id>`、`cart.selected.<id>`，已有购物车可继续恢复。
-
-修正了数量归零／删除后选中状态未清除、空购物车被判定为全选、搜索缺少商品名时强制解包，搜索框点击区域拦截输入焦点，以及底部两个 Tab 的徽标仍按三个 Tab 定位的问题。请求失败保留现有商品；取消不显示错误；已取消请求的结果不会覆盖后续请求。
-
-应用仍通过 Moya 延迟 3 秒返回 `Resources/Fixtures/Products.json`，`https://store/api` 是原项目的示例地址，不代表已经接入可用后端。充值、登录原本没有可用页面和完整请求链，本次保留其 DTO 定义，移除了无调用方的 Action／State 占位分支。扫码、付款也仍是原有占位交互，未增加支付功能。
-
-## 验证
-
-在 Xcode 中运行 `PayPayPayTests` 与 `CatalogFlowUITests`，或将下面的 `<SIMULATOR_ID>` 替换为本机可用模拟器 ID：
+在 Xcode 中选择 `dev`，按 `⌘U` 运行 Scheme 中的测试。也可先用 `xcrun simctl list devices available` 查询模拟器 ID，再执行：
 
 ```sh
 xcodebuild test \
@@ -197,8 +133,65 @@ xcodebuild test \
   -destination 'platform=iOS Simulator,id=<SIMULATOR_ID>' \
   -only-testing:PayPayPayTests \
   -only-testing:PayPayPayUITests/CatalogFlowUITests \
-  -disableAutomaticPackageResolution \
+  -onlyUsePackageVersionsFromResolvedFile \
   CODE_SIGNING_ALLOWED=NO
 ```
 
-单元测试覆盖仓储失败、HTTP／解码错误、请求取消和重复加载、旧结果隔离、加载期间的购物车修改、持久化键兼容性及数量／选中规则。UI 测试验证真实 bundle 中的商品样本加载、搜索和 Tab 导航。
+将 `<SIMULATOR_ID>` 替换为本机可用设备 ID。上面的命令运行单元测试与商品流程 UI 测试，不包含启动性能测试。
+
+单元测试覆盖购物车规则与持久化、HTTP 和解码错误、后台解码、请求取消、重复加载、旧请求结果隔离，以及 Toast 延迟关闭。商品流程 UI 测试覆盖样本加载、搜索与 Tab 导航。CI 当前不会运行这些测试，编译徽章不代表测试结果。
+
+## 代码检查与打包
+
+### 工具准备
+
+仓库通过 `.ruby-version` 固定 Ruby **4.0.6**，通过 `Gemfile` / `Gemfile.lock` 管理 Bundler **4.0.20** 和 Fastlane **2.238.0**。已安装并初始化 rbenv 后，在根目录执行：
+
+```sh
+rbenv install -s
+gem install bundler -v 4.0.20 --no-document
+bundle config set --local path vendor/bundle
+bundle install
+brew install swiftlint
+```
+
+### SwiftLint
+
+```sh
+bundle exec fastlane ios lint
+```
+
+`.swiftlint.yml` 使用默认规则，仅检查应用、单元测试和 UI 测试目录。三个 Fastlane 打包入口都会先执行 lint；error 阻止打包，warning 保留为提示。
+
+### 归档与导出
+
+```sh
+# 开发环境：默认导出开发包
+bundle exec fastlane ios build_ios_develop
+
+# 预发布环境：默认导出开发包
+bundle exec fastlane ios build_ios_staging
+
+# 生产环境：默认导出 App Store Connect 分发包
+bundle exec fastlane ios build_ios_production
+```
+
+三个入口使用各自的 `Release-环境` 配置，仅在本地归档和导出，不自动上传。签名沿用工程中的团队，支持通过 `FASTLANE_TEAM_ID` 覆盖；本机需具备相应证书和描述文件。
+
+可用 `export_method` 指定 `debugging`、`release-testing`、`app-store-connect` 或 `enterprise`，例如：
+
+```sh
+FASTLANE_TEAM_ID=YOUR_TEAM_ID bundle exec fastlane ios build_ios_staging export_method:release-testing
+```
+
+没有签名环境时，可生成未签名归档，不导出 IPA：
+
+```sh
+bundle exec fastlane ios build_ios_develop unsigned:true
+```
+
+产物位于 `output/<scheme>/`，文件名包含环境、版本号、构建号、时间和 Git 提交号；日志位于其 `logs/` 子目录。构建过程保留配置中的版本号与构建号。`output/`、`build/`、`.bundle/` 和 `vendor/bundle/` 已加入 Git 忽略规则。
+
+## 许可证
+
+本项目使用 [Apache License 2.0](LICENSE)。
