@@ -1,59 +1,117 @@
 # Buffet
-SwiftUI + Combine + Redux 项目实践
 
-### 环境
-- Xcode 16 或更新版本（Swift 6 工具链）
-- Swift 6 语言模式（应用、单元测试和 UI 测试的 Debug / Release 配置）
-- iOS 13.0 或更新版本
+使用 SwiftUI 展示商品列表和购物车的 iOS 示例项目，按 Clean Architecture 分层，展示层采用 MVVM。
 
-Store、Command 和服务层使用 `@MainActor` 隔离；Combine 在更新 Store 前切换到主队列。
+## 开发环境
 
-### 包管理 
+- Xcode 16 或更新版本，Swift 6 语言模式。
+- 应用及测试 Target 最低支持 iOS 15；保留 `ObservableObject` / Combine 驱动 SwiftUI 更新。
+- 通过 Swift Package Manager 管理 Moya、Kingfisher，提交 `Package.resolved` 固定已验证的依赖版本。
 
-- Swift Package
-- 第三方包保留锁定版本，按各自 Package.swift 声明的 Swift 语言模式编译。
+打开 `PayPayPay/PayPayPay.xcodeproj`，运行 `PayPayPay` scheme。
 
-### 代码规范
+### Swift 6 并发检查（2026-09-04）
 
-- 使用了 [SwiftLint](https://github.com/realm/SwiftLint)
+- 应用、单元测试、UI 测试 Target 的 Debug / Release 均已配置 `SWIFT_VERSION = 6.0`，严格并发检查由 Swift 6 语言模式启用。
+- 当前没有启用默认 MainActor 隔离、Approachable Concurrency 或 `NonisolatedNonsendingByDefault`；未标注声明使用默认的 nonisolated 语义。UI 状态和请求生命周期显式由 `@MainActor` 管理，跨回调边界传递 `Sendable` 数据。
+- Moya 回调显式使用后台队列完成 JSON 解码，随后回到 MainActor 完成 continuation；回调标注 `@Sendable`，避免继承调用方的 actor 隔离。第三方依赖仍按各自 Package 的语言模式编译，不代表依赖源码也全部迁移到 Swift 6。
+- Toast 在实际展示时启动两秒关闭计时，消失时取消旧回调，支持页面出现后才到达的错误提示。沿用现有延迟工具。
+- 本次使用 Xcode 26.1 / Swift 6.2.1 验证；未引入仅 Swift 6.2 可用的语法。新增后台解码及延迟出现 Toast 的回归测试。
 
-### 项目架构
+### 三方依赖更新（2026-09-04）
 
-- 采用 Clean Architecture，按依赖方向组织为 Domain → Data → Presentation：
-  - Domain：`ProductRepository`、`CartRepository` 定义业务边界，`ProductInfoModel` 是纯值对象。
-  - Data：`ProductRepositoryImpl` 负责 Moya/Combine 网络适配，`CartRepositoryImpl` 负责 UserDefaults 持久化。
-  - Presentation：`Store` 负责状态和用户意图，View 只通过 Action 与 Store 交互。
-  - Composition root：`Store` 初始化时注入仓储，生产环境使用默认实现，测试可注入替身。
+- Moya：`15.0.0-alpha.1` → `15.0.3`（正式版）。
+- Kingfisher：`5.15.0` → `8.12.0`；SwiftUI 图片组件改为使用统一的 `Kingfisher` 产品与模块。最低系统版本统一为 iOS 15，直接使用 `KFImage`。
+- Alamofire：`5.2.2` → `5.12.0`；RxSwift：`5.1.1` → `6.10.2`。
+- ReactiveSwift：从 Moya fork `6.1.0` 切换到官方上游 `6.7.0`。Moya 15.0.3 的依赖声明限制在 `6.x`，因此采用该范围内最新稳定版，不能直接解析到上游 `7.2.1`。
+- 应用仅链接 Moya 和 Kingfisher；RxSwift、ReactiveSwift 属于 Moya 包的可选响应式产品依赖，业务代码未直接使用。
 
-  迁移采用垂直切片方式，商品列表和购物车已完成，后续设置与充值功能应沿用同样的仓储边界。
+## 目录与职责
 
-[![BAzLG9.png](https://s1.ax1x.com/2020/10/23/BAzLG9.png)](https://imgchr.com/i/BAzLG9)
+物理文件夹与 Xcode 分组保持一致：
 
-[![Bn7rX6.png](https://s1.ax1x.com/2020/10/26/Bn7rX6.png)](https://imgchr.com/i/Bn7rX6)
+```text
+PayPayPay/PayPayPay/
+├── Application/
+│   ├── AppDelegate.swift
+│   ├── SceneDelegate.swift
+│   ├── DependencyInjection/AppContainer.swift
+│   ├── Previews/CatalogPreviews.swift
+│   └── Info.plist
+├── Domain/
+│   ├── Entities/                 # Product、CartItem
+│   ├── Errors/                   # 与框架无关的 RepositoryError
+│   ├── Repositories/             # ProductRepository、CartRepository 协议
+│   └── UseCases/                 # LoadProductsUseCase、ManageCartUseCase
+├── Data/
+│   ├── DTOs/                     # API 字段及 ProductDTO → Product 映射
+│   ├── Networking/               # Moya 请求、取消和错误转换
+│   └── Repositories/             # RemoteProductRepository、UserDefaultsCartRepository
+├── Presentation/
+│   ├── Products/
+│   │   ├── Models/               # CatalogState、CatalogAction、商品显示格式
+│   │   ├── ViewModels/            # CatalogViewModel
+│   │   └── Views/                # ProductListView、ProductRowView
+│   ├── Cart/Views/               # CartView、CartRowView、CartSummaryView
+│   ├── Navigation/               # MainTabView
+│   └── Shared/                   # Components、Extensions、Utilities
+└── Resources/
+    ├── Assets.xcassets/
+    ├── Base.lproj/
+    ├── Fixtures/Products.json
+    └── Preview Content/
 
-- Store
+PayPayPay/PayPayPayTests/
+├── Domain/
+├── Data/
+├── Presentation/
+└── Support/                      # 内存仓储、可控异步仓储
+```
 
-  Store 就是保存数据的地方，你可以把它看成一个容器。整个应用只能有一个 Store。并提供一些帮助方法来存取，分发以及注册监听状态。
+依赖方向为 `Presentation → Domain ← Data`，`Application` 负责装配三者。
 
-- State
+- **Domain** 只定义商品、购物车、仓储契约和业务规则，不引用 SwiftUI、Moya、UserDefaults 或 DTO。数量下限、选中规则、删除和加载后恢复购物车都由 Use Case 处理。
+- **Data** 实现 Domain 的仓储协议。JSON 字段名、图片地址拼接、HTTP 状态码和存储键留在这一层。网络回调桥接到 async/await，每个请求单独管理取消与 continuation。
+- **Presentation** 负责页面状态与用户意图。`CatalogViewModel` 通过注入的 Use Case 工作；首页和购物车共享同一实例，避免两套状态不一致。View 不能直接修改 `CatalogState`。
+- **Application** 是 composition root。`AppContainer` 创建具体仓储并注入 Use Case、ViewModel；`SceneDelegate` 持有页面生命周期，断开场景时取消加载。Preview 也在这里装配，使用独立的 UserDefaults suite。
 
-  是 app 一个状态机，状态决定用户界面。
+目前仍是单一应用 Target，没有额外引入 SPM 业务模块。`Scripts/check_architecture.py` 检查跨层类型引用，并单独用 Swift 6 编译检查 Domain；它是轻量边界检查，不替代独立模块的编译器访问控制。
 
-- Action
+## 命名规范
 
-  View 不能直接操作 State，而只能通过发送 Action 的方式，间接改变存储在 Store 中的 State。
+- 实体使用业务名：`Product`、`CartItem`，不带通用 `Model` 后缀。
+- 业务操作使用 `…UseCase`；仓储协议使用 `…Repository`；具体实现说明技术或来源，例如 `UserDefaultsCartRepository`。
+- 网络载荷使用 `…DTO`，页面使用 `…View`，展示逻辑使用 `…ViewModel`。
+- 扩展文件使用 `类型+职责.swift`，例如 `CartItem+Presentation.swift`。
+- 页面按 Products、Cart 等功能归类，避免再增加含义模糊的 `Service`、`Utils`、`DataFlow` 文件夹。
 
-- Reducer
+## 行为与迁移范围
 
-  Reducer 接受原有的 State 和发送过来的 Action，生成新的 State。新的 State 驱动 View 更新。
+商品展示、搜索、购物车增减、单选／全选、删除和总价计算均沿用原有交互。商品与购物车状态拆分后，持久化仍使用 `cart.count.<id>`、`cart.selected.<id>`，已有购物车可继续恢复。
 
-- Command
-  
-  来执行所需的副作用,比如网络请求，数据磁盘写入。
+修正了数量归零／删除后选中状态未清除、空购物车被判定为全选、搜索缺少商品名时强制解包，搜索框点击区域拦截输入焦点，以及底部两个 Tab 的徽标仍按三个 Tab 定位的问题。请求失败保留现有商品；取消不显示错误；已取消请求的结果不会覆盖后续请求。
 
-### 网络层
+应用仍通过 Moya 延迟 3 秒返回 `Resources/Fixtures/Products.json`，`https://store/api` 是原项目的示例地址，不代表已经接入可用后端。充值、登录原本没有可用页面和完整请求链，本次保留其 DTO 定义，移除了无调用方的 Action／State 占位分支。扫码、付款也仍是原有占位交互，未增加支付功能。
 
-- 采用了 Combine + Moya 的方式。
+## 验证
 
-[![nJD1H0.png](https://s2.ax1x.com/2019/09/09/nJD1H0.png)](https://imgchr.com/i/nJD1H0)
-代码部分在 NetWork 和 Service 两个文件夹下。
+在仓库根目录运行边界检查：
+
+```sh
+python3 Scripts/check_architecture.py
+```
+
+在 Xcode 中运行 `PayPayPayTests` 与 `CatalogFlowUITests`，或将下面的 `<SIMULATOR_ID>` 替换为本机可用模拟器 ID：
+
+```sh
+xcodebuild test \
+  -project PayPayPay/PayPayPay.xcodeproj \
+  -scheme PayPayPay \
+  -destination 'platform=iOS Simulator,id=<SIMULATOR_ID>' \
+  -only-testing:PayPayPayTests \
+  -only-testing:PayPayPayUITests/CatalogFlowUITests \
+  -disableAutomaticPackageResolution \
+  CODE_SIGNING_ALLOWED=NO
+```
+
+单元测试覆盖仓储失败、HTTP／解码错误、请求取消和重复加载、旧结果隔离、加载期间的购物车修改、持久化键兼容性及数量／选中规则。UI 测试验证真实 bundle 中的商品样本加载、搜索和 Tab 导航。
