@@ -2,7 +2,7 @@
 
 [![iOS dev Build](https://github.com/FenWangSiCheng/Buffet/actions/workflows/ios.yml/badge.svg?branch=main&event=push)](https://github.com/FenWangSiCheng/Buffet/actions/workflows/ios.yml)
 
-一个使用 SwiftUI 构建的 iOS 商品列表与购物车示例。项目按 Clean Architecture 分层，展示层采用 MVVM，通过 Swift 6、async/await 和显式 MainActor 隔离管理界面状态与异步请求。
+一个使用 SwiftUI 构建的 iOS 商品列表与购物车示例。项目按 Clean Architecture 分层，展示层采用 MVVM + Observation，通过 Swift 6.2、async/await 和显式 MainActor 隔离管理界面状态与异步请求。
 
 仓库名称为 **Buffet**，Xcode 工程及应用 Target 名称为 **PayPayPay**。
 
@@ -14,11 +14,11 @@
 - 使用 UserDefaults 保存购物车数量和选中状态，重新启动后恢复。
 - 加载指示、错误 Toast、请求取消与重复加载控制。
 
-当前商品数据来自 `PayPayPay/Resources/Fixtures/Products.json`，由 Moya 延迟 3 秒返回。三个环境都使用示例地址 `https://store/api`，尚未接入真实后端。扫码和付款为界面占位；登录、充值仅保留相关 DTO，没有完整业务流程。
+当前商品数据来自 `PayPayPay/Resources/Fixtures/Products.json`，由 Moya 延迟 3 秒返回。三个环境都使用示例地址 `https://store/api`，尚未接入真实后端。扫码为界面占位，付款按钮会提示功能尚未上线；登录、充值仅保留相关 DTO，没有完整业务流程。
 
 ## 快速开始
 
-本地已使用 **Xcode 26.1** 验证 `dev` 的 Release 编译。工程使用 **Swift 6 语言模式**，最低部署版本为 **iOS 15**，支持 iPhone 和 iPad。
+本地已使用 **Xcode 26.1** 验证 `dev` 的 Release 编译。工程使用 **Swift 6 语言模式**（工具链 Swift 6.2），最低部署版本为 **iOS 18**，支持 iPhone 和 iPad。
 
 1. 克隆仓库并打开工程：
 

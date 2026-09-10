@@ -1,49 +1,18 @@
 #if DEBUG
 import SwiftUI
 
-struct MainTabView_Previews: PreviewProvider {
-    static var previews: some View {
-
-        Group {
-            MainTabView()
-                .environment(\.colorScheme, .light)
-                .previewDevice(PreviewDevice(rawValue: "iPhone X"))
-                .environmentObject(AppContainer.makeCatalogViewModel(
-                    defaults: UserDefaults(suiteName: "Buffet.Previews")!
-                ))
-            MainTabView()
-                .environment(\.colorScheme, .dark)
-                .previewDevice(PreviewDevice(rawValue: "iPhone X"))
-                .environmentObject(AppContainer.makeCatalogViewModel(
-                    defaults: UserDefaults(suiteName: "Buffet.Previews")!
-                ))
-            MainTabView()
-                .environment(\.colorScheme, .light)
-                .previewDevice(PreviewDevice(rawValue: "iPhone 8"))
-                .environmentObject(AppContainer.makeCatalogViewModel(
-                    defaults: UserDefaults(suiteName: "Buffet.Previews")!
-                ))
-        }
-
+extension CatalogViewModel {
+    /// A view model backed by the bundled fixture data, for previews only.
+    static func preview() -> CatalogViewModel {
+        AppContainer.makeCatalogViewModel(
+            defaults: UserDefaults(suiteName: "Buffet.Previews") ?? .standard
+        )
     }
 }
 
-struct CartView_Previews: PreviewProvider {
-    static var previews: some View {
-        CartView()
-            .environmentObject(AppContainer.makeCatalogViewModel(
-                defaults: UserDefaults(suiteName: "Buffet.Previews")!
-            ))
-    }
+#Preview("Catalog - dark") {
+    MainTabView()
+        .environment(CatalogViewModel.preview())
+        .preferredColorScheme(.dark)
 }
-
-struct ProductListView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProductListView()
-            .environmentObject(AppContainer.makeCatalogViewModel(
-                defaults: UserDefaults(suiteName: "Buffet.Previews")!
-            ))
-    }
-}
-
 #endif

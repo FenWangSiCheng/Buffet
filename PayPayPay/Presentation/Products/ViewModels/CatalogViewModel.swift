@@ -1,10 +1,17 @@
-import Combine
 import Foundation
+import Observation
 
 /// Shared presentation state for the catalog and cart tabs; dependencies point into Domain.
+@Observable
 @MainActor
-final class CatalogViewModel: ObservableObject {
-    @Published private(set) var state = CatalogState()
+final class CatalogViewModel {
+    private(set) var state = CatalogState()
+
+    /// Backs the catalog's search field; the filtering happens as the text changes.
+    var searchText: String {
+        get { state.searchText }
+        set { state.setSearchText(newValue) }
+    }
 
     private let loadProductsUseCase: LoadProductsUseCase
     private let manageCartUseCase: ManageCartUseCase
@@ -16,23 +23,23 @@ final class CatalogViewModel: ObservableObject {
     }
 
     func increaseQuantity(productID: String) async {
-        state.items = await manageCartUseCase.changeQuantity(of: productID, by: 1)
+        state.setItems(await manageCartUseCase.changeQuantity(of: productID, by: 1))
     }
 
     func decreaseQuantity(productID: String) async {
-        state.items = await manageCartUseCase.changeQuantity(of: productID, by: -1)
+        state.setItems(await manageCartUseCase.changeQuantity(of: productID, by: -1))
     }
 
     func setItemSelected(_ selected: Bool, productID: String) async {
-        state.items = await manageCartUseCase.select(selected, productID: productID)
+        state.setItems(await manageCartUseCase.select(selected, productID: productID))
     }
 
     func setAllSelected(_ selected: Bool) async {
-        state.items = await manageCartUseCase.select(selected)
+        state.setItems(await manageCartUseCase.select(selected))
     }
 
     func removeSelected() async {
-        state.items = await manageCartUseCase.removeSelected()
+        state.setItems(await manageCartUseCase.removeSelected())
     }
 
     func load() async {
@@ -50,12 +57,12 @@ final class CatalogViewModel: ObservableObject {
         do {
             let items = try await loadProductsUseCase.execute()
             guard loadID == id else { return }
-            state.items = items
+            state.setItems(items)
         } catch is CancellationError {
             // Leaving the scene is not a user-visible failure.
         } catch {
             guard loadID == id else { return }
-            state.errorMessage = ((error as? RepositoryError) ?? .unknown).errorDescription()
+            state.errorMessage = ((error as? RepositoryError) ?? .unknown).errorDescription
         }
     }
 

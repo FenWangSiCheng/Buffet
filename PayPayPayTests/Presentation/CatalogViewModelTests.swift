@@ -19,7 +19,7 @@ final class CatalogViewModelTests: XCTestCase {
         await viewModel.load()
         XCTAssertFalse(viewModel.state.isLoading)
         XCTAssertTrue(viewModel.state.isShowingError)
-        XCTAssertEqual(viewModel.state.errorMessage, RepositoryError.notReachedServer.errorDescription())
+        XCTAssertEqual(viewModel.state.errorMessage, RepositoryError.notReachedServer.errorDescription)
         XCTAssertEqual(viewModel.state.items[0].quantity, 1)
         repository.result = .success([Product(id: "one")])
         await viewModel.load()

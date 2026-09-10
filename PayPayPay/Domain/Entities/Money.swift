@@ -1,6 +1,6 @@
 import Foundation
 
-struct Money: Equatable, Comparable, Sendable {
+struct Money: Equatable, Comparable, AdditiveArithmetic, Sendable {
     static let zero = Money(amount: .zero)
 
     let amount: Decimal
@@ -22,6 +22,10 @@ struct Money: Equatable, Comparable, Sendable {
 
     static func + (lhs: Money, rhs: Money) -> Money {
         Money(amount: lhs.amount + rhs.amount)
+    }
+
+    static func - (lhs: Money, rhs: Money) -> Money {
+        Money(amount: lhs.amount - rhs.amount)
     }
 
     static func * (lhs: Money, rhs: Int) -> Money {

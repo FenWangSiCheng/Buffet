@@ -1,11 +1,3 @@
-//
-//  CartSummaryView.swift
-//  PayPayPay
-//
-//  Created by wangsicheng on 2020/8/31.
-//  Copyright © 2020 wangsicheng. All rights reserved.
-//
-
 import SwiftUI
 
 struct CartSummaryView: View {
@@ -15,44 +7,34 @@ struct CartSummaryView: View {
     let hasSelection: Bool
     let onToggleAll: () -> Void
     let onRemoveSelected: () -> Void
+    let onCheckout: () -> Void
 
     var body: some View {
-        HStack {
-            Spacer().frame(width: 20)
-            Button {
-                onToggleAll()
-            } label: {
-                HStack {
-                    Image(systemName: isAllSelected ? "checkmark.circle.fill" : "circle")
-                        .font(.system(size: 16, weight: .regular))
-                        .foregroundColor(isAllSelected ? .red : .gray)
-                    Text("全选")
-                        .font(.footnote)
-                }
+        HStack(spacing: 12) {
+            Button(action: onToggleAll) {
+                Label("全选", systemImage: isAllSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.footnote)
             }
             .buttonStyle(.plain)
+            .foregroundStyle(isAllSelected ? Color.red : Color.secondary)
+            .frame(minHeight: Theme.minimumTapSize)
 
             if !isEditing {
-                Text("合计：\(totalPrice.formattedPrice)")
+                Text("合计：\(totalPrice.amount, format: Money.currencyFormat)")
                     .font(.footnote)
             }
 
-            Spacer()
+            Spacer(minLength: 0)
 
-            Button(isEditing ? "删 除" : "付 款") {
-                if isEditing {
-                    onRemoveSelected()
-                }
-            }
-            .font(.footnote)
-            .foregroundColor(hasSelection ? .black : .white)
-            .frame(width: 120, height: 30)
-            .background(hasSelection ? Color.red : Color.gray)
-            .clipShape(Capsule())
-            .disabled(!hasSelection)
-
-            Spacer().frame(width: 20)
+            Button(isEditing ? "删 除" : "付 款",
+                   action: isEditing ? onRemoveSelected : onCheckout)
+                .font(.footnote)
+                .buttonStyle(.borderedProminent)
+                .tint(hasSelection ? .red : .gray)
+                .disabled(!hasSelection)
+                .frame(minHeight: Theme.minimumTapSize)
         }
-        .frame(height: 50)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 8)
     }
 }

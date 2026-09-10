@@ -1,66 +1,45 @@
-//
-//  ToastView.swift
-//  PayPayPay
-//
-//  Created by wangsicheng on 2020/9/11.
-//  Copyright © 2020 wangsicheng. All rights reserved.
-//
-
-import UIKit
 import SwiftUI
 
-struct ToastView<Presenting>: View where Presenting: View {
+/// Presents a transient message over the content it modifies.
+struct ToastModifier: ViewModifier {
+    let message: String?
+    let onDismiss: () -> Void
 
-    @Binding var isShowing: Bool
-    @State private var dismissTask: GCDDelayTask?
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    let presenting: () -> Presenting
+    func body(content: Content) -> some View {
+        ZStack {
+            content.blur(radius: message == nil ? 0 : 1)
 
-    let text: Text
-
-    var body: some View {
-
-        GeometryReader { geometry in
-
-            ZStack(alignment: .center) {
-
-                self.presenting()
-                    .blur(radius: self.isShowing ? 1 : 0)
-
-                if isShowing {
-                    VStack {
-                        self.text
+            if let message {
+                Text(message)
+                    .font(.callout)
+                    .foregroundStyle(.primary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 16)
+                    .frame(maxWidth: 240)
+                    .background(.regularMaterial,
+                                in: .rect(cornerRadius: Theme.toastCornerRadius))
+                    .transition(transition)
+                    .task(id: message) {
+                        try? await Task.sleep(for: Theme.toastDuration)
+                        guard !Task.isCancelled else { return }
+                        onDismiss()
                     }
-                    .frame(width: geometry.size.width / 2,
-                           height: geometry.size.height / 5)
-                    .background(Color.secondary.colorInvert())
-                    .foregroundColor(Color.primary)
-                    .cornerRadius(20)
-                    .transition(.slide)
-                    .onAppear {
-                        cancel(dismissTask)
-                        dismissTask = delay(2) { isShowing = false }
-                    }
-                    .onDisappear {
-                        cancel(dismissTask)
-                        dismissTask = nil
-                    }
-                }
-
             }
-
         }
-
+        .animation(reduceMotion ? nil : .bouncy, value: message)
     }
 
+    private var transition: AnyTransition {
+        reduceMotion ? .opacity : .opacity.combined(with: .scale)
+    }
 }
 
 extension View {
-
-    func toast(isShowing: Binding<Bool>, text: Text) -> some View {
-        ToastView(isShowing: isShowing,
-              presenting: { self },
-              text: text)
+    /// Shows `message` as a toast for a couple of seconds, then calls `onDismiss`.
+    func toast(message: String?, onDismiss: @escaping () -> Void) -> some View {
+        modifier(ToastModifier(message: message, onDismiss: onDismiss))
     }
-
 }

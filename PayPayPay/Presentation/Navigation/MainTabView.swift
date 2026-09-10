@@ -1,29 +1,27 @@
-//
-//  MainTabView.swift
-//  PayPayPay
-//
-//  Created by Wang Wei on 2019/09/02.
-//  Copyright © 2019 OneV's Den. All rights reserved.
-//
-
 import SwiftUI
 
 struct MainTabView: View {
-    @EnvironmentObject var viewModel: CatalogViewModel
+    @Environment(CatalogViewModel.self) private var viewModel
+    @State private var selection: AppTab = .home
 
     var body: some View {
-        TabView {
-            ProductListView()
-                .tabItem {
-                    Label("首页", systemImage: "house.fill")
-                }
+        TabView(selection: $selection) {
+            Tab("首页", systemImage: "house.fill", value: AppTab.home) {
+                ProductListView()
+            }
 
-            CartView()
-                .tabItem {
-                    Label("购物车", systemImage: "cart.fill")
-                }
-                .badge(viewModel.state.cartItemCount)
+            Tab("购物车", systemImage: "cart.fill", value: AppTab.cart) {
+                CartView()
+            }
+            .badge(viewModel.state.cartItemCount)
         }
         .tint(.orange)
     }
 }
+
+#if DEBUG
+#Preview {
+    MainTabView()
+        .environment(CatalogViewModel.preview())
+}
+#endif
