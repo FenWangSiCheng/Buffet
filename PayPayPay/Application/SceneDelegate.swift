@@ -10,7 +10,6 @@ import UIKit
 import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
     var window: UIWindow?
     private let catalogViewModel = AppContainer.makeCatalogViewModel()
 
@@ -19,7 +18,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
-
         let contentView = MainTabView().environmentObject(catalogViewModel)
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
@@ -29,29 +27,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
-    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
-
-    }
-
     func sceneDidDisconnect(_ scene: UIScene) {
         catalogViewModel.cancelLoading()
-
     }
-
-    func sceneDidBecomeActive(_ scene: UIScene) {
-
-    }
-
-    func sceneWillResignActive(_ scene: UIScene) {
-
-    }
-
-    func sceneWillEnterForeground(_ scene: UIScene) {
-
-    }
-
-    func sceneDidEnterBackground(_ scene: UIScene) {
-
-    }
-
 }

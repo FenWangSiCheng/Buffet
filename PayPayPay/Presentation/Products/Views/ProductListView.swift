@@ -12,50 +12,41 @@ struct ProductListView: View {
     @EnvironmentObject var viewModel: CatalogViewModel
     @State private var searchText: String = ""
 
+    private var filteredItems: [CartItem] {
+        viewModel.state.items.filter {
+            searchText.isEmpty || $0.nameText.localizedCaseInsensitiveContains(searchText)
+        }
+    }
+
     var body: some View {
         NavigationView {
             ZStack {
-                ZStack {
-                    VStack {
-                        SearchBarView(text: $searchText)
-                            .padding(.top, 10)
+                VStack {
+                    SearchBarView(text: $searchText)
+                        .padding(.top, 10)
 
-                        List(viewModel.state.items.filter {
-                            searchText.isEmpty || $0.nameText.contains(searchText)
-                        }) { model in
-                            ProductRowView(model: model)
-                        }
-                        .simultaneousGesture(TapGesture().onEnded {
-                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
-                                                            to: nil, from: nil, for: nil)
-                        })
+                    List(filteredItems) { model in
+                        ProductRowView(model: model)
                     }
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Image(systemName: "qrcode.viewfinder")
-                                .font(.system(size: 25, weight: .regular))
-                                .foregroundColor(.black)
-                            Text("扫二维码")
-                                .font(.subheadline)
-                                .foregroundColor(.black)
+                    .simultaneousGesture(TapGesture().onEnded(dismissKeyboard))
+                }
 
-                        }
+                VStack {
+                    Spacer()
+                    Label("扫二维码", systemImage: "qrcode.viewfinder")
+                        .font(.subheadline)
+                        .foregroundColor(.black)
                         .frame(width: 120, height: 40)
                         .background(Color.orange)
-                        .cornerRadius(20)
-                        Spacer().frame(height: 10)
-                    }
+                        .clipShape(Capsule())
+                    Spacer().frame(height: 10)
                 }
 
-                ActivityIndicatorView(isAnimating: viewModel.state.isLoading, style: .large)
-                    .onAppear {
-                        self.viewModel.dispatch(.loadProducts)
-                }
+                ActivityIndicatorView(isAnimating: viewModel.state.isLoading)
             }
-             .navigationBarTitle("首页", displayMode: .inline)
-
+            .navigationBarTitle("首页", displayMode: .inline)
         }
+        .onAppear { viewModel.dispatch(.loadProducts) }
         .toast(
             isShowing: Binding(
                 get: { viewModel.state.isShowingError },
@@ -63,5 +54,10 @@ struct ProductListView: View {
             ),
             text: Text(viewModel.state.error?.errorDescription() ?? "")
         )
+    }
+
+    private func dismissKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+                                        to: nil, from: nil, for: nil)
     }
 }

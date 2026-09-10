@@ -10,50 +10,45 @@ import SwiftUI
 
 struct CartSummaryView: View {
     @EnvironmentObject var viewModel: CatalogViewModel
-    @Binding var isEdited: Bool
+    @Binding var isEditing: Bool
+
     var body: some View {
         HStack {
             Spacer().frame(width: 20)
-            HStack {
-                if viewModel.state.isAllSelected {
-                    Image(systemName: "checkmark.circle.fill")
+            Button {
+                viewModel.dispatch(viewModel.state.isAllSelected ? .deselectAll : .selectAll)
+            } label: {
+                HStack {
+                    Image(systemName: viewModel.state.isAllSelected ? "checkmark.circle.fill" : "circle")
                         .font(.system(size: 16, weight: .regular))
-                        .foregroundColor(.red)
-                } else {
-                    Image(systemName: "circle")
-                        .font(.system(size: 16, weight: .regular))
-                        .foregroundColor(.gray)
-                }
-                Text("全选")
-                    .font(.footnote)
-            }.onTapGesture {
-                if self.viewModel.state.isAllSelected {
-                    self.viewModel.dispatch(.deselectAll)
-                } else {
-                    self.viewModel.dispatch(.selectAll)
+                        .foregroundColor(viewModel.state.isAllSelected ? .red : .gray)
+                    Text("全选")
+                        .font(.footnote)
                 }
             }
-            if isEdited {
+            .buttonStyle(.plain)
 
-            } else {
-                Text("合计：\(viewModel.state.totalPrice.stringToPrice())")
+            if !isEditing {
+                Text("合计：\(viewModel.state.totalPrice.formattedPrice)")
                     .font(.footnote)
             }
+
             Spacer()
-            Text(isEdited ? "删 除" : "付 款")
-                .font(.footnote)
-                .foregroundColor(viewModel.state.hasSelection ? .black :.white)
-                .frame(width: 120, height: 30, alignment: .center)
-                .background(viewModel.state.hasSelection ? Color.red : Color.gray)
-                .cornerRadius(15)
-                .onTapGesture {
-                    if self.isEdited {
-                        self.viewModel.dispatch(.removeSelected)
-                    } else {
 
-                    }
+            Button(isEditing ? "删 除" : "付 款") {
+                if isEditing {
+                    viewModel.dispatch(.removeSelected)
                 }
+            }
+            .font(.footnote)
+            .foregroundColor(viewModel.state.hasSelection ? .black : .white)
+            .frame(width: 120, height: 30)
+            .background(viewModel.state.hasSelection ? Color.red : Color.gray)
+            .clipShape(Capsule())
+            .disabled(!viewModel.state.hasSelection)
+
             Spacer().frame(width: 20)
-        }.frame(height: 50)
+        }
+        .frame(height: 50)
     }
 }

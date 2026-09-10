@@ -9,8 +9,5 @@
 import Foundation
 
 extension Double {
-
-    public func stringToPrice() -> String {
-        return String(format: "%.02f", self)
-    }
+    var formattedPrice: String { formatted(.number.precision(.fractionLength(2))) }
 }

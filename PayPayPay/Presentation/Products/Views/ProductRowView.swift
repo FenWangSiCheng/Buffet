@@ -11,7 +11,6 @@ import Kingfisher
 
 struct ProductRowView: View {
     @EnvironmentObject var viewModel: CatalogViewModel
-     @State private var showingAlert = false
     let model: CartItem
 
     var body: some View {
@@ -25,7 +24,7 @@ struct ProductRowView: View {
                         .font(.subheadline)
                         .multilineTextAlignment(.leading)
                         .lineLimit(2)
-                        .foregroundColor(UIColor.textHeaderPrimary)
+                        .foregroundColor(.textHeaderPrimary)
                     Spacer()
 
                 }
@@ -45,29 +44,17 @@ struct ProductRowView: View {
                         .strikethrough()
                         .foregroundColor(.gray)
                     Spacer()
-                    if self.model.quantity <= 0 {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.system(size: 16, weight: .regular))
-                            .foregroundColor(.orange)
-                            .onTapGesture {
-                                self.viewModel.dispatch(.increaseQuantity(productID: self.model.id))
-                        }
-                    } else {
-                        Image(systemName: "minus.circle.fill")
-                            .font(.system(size: 16, weight: .regular))
-                            .foregroundColor(.orange)
-                            .onTapGesture {
-                                self.viewModel.dispatch(.decreaseQuantity(productID: self.model.id))
+                    if model.quantity > 0 {
+                        quantityButton(systemImage: "minus.circle.fill", label: "减少数量") {
+                            viewModel.dispatch(.decreaseQuantity(productID: model.id))
                         }
 
-                        Text(self.model.quantityText)
+                        Text(model.quantityText)
                             .font(.footnote)
-                        Image(systemName: "plus.circle.fill")
-                            .font(.system(size: 16, weight: .regular))
-                            .foregroundColor(.orange)
-                            .onTapGesture {
-                                self.viewModel.dispatch(.increaseQuantity(productID: self.model.id))
-                        }
+                    }
+
+                    quantityButton(systemImage: "plus.circle.fill", label: "增加数量") {
+                        viewModel.dispatch(.increaseQuantity(productID: model.id))
                     }
                 }
             }
@@ -75,5 +62,16 @@ struct ProductRowView: View {
         }
         .padding(10)
         .frame(height: 150)
+    }
+
+    private func quantityButton(systemImage: String, label: String,
+                                action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: systemImage)
+                .font(.system(size: 16))
+                .foregroundColor(.orange)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(label)
     }
 }

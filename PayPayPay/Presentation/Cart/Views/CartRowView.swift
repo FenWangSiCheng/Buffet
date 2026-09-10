@@ -11,28 +11,22 @@ import SwiftUI
 struct CartRowView: View {
     @EnvironmentObject var viewModel: CatalogViewModel
     let model: CartItem
+
     var body: some View {
         HStack {
-            if model.isSelected {
-
-                Image(systemName: "checkmark.circle.fill")
+            Button {
+                viewModel.dispatch(model.isSelected
+                    ? .deselectItem(productID: model.id)
+                    : .selectItem(productID: model.id))
+            } label: {
+                Image(systemName: model.isSelected ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 20, weight: .regular))
-                    .foregroundColor(.red)
-                    .onTapGesture {
-                        self.viewModel.dispatch(.deselectItem(productID: self.model.id))
-                    }
-            } else {
-
-                Image(systemName: "circle")
-                    .font(.system(size: 20, weight: .regular))
-                    .foregroundColor(.gray)
-                    .onTapGesture {
-                        self.viewModel.dispatch(.selectItem(productID: self.model.id))
-                    }
+                    .foregroundColor(model.isSelected ? .red : .gray)
             }
+            .buttonStyle(.plain)
+            .accessibilityLabel(model.isSelected ? "取消选择" : "选择商品")
 
             ProductRowView(model: model)
-
         }
     }
 }

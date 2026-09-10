@@ -11,32 +11,33 @@ struct ManageCartUseCase {
     }
 
     func changeQuantity(of productID: String, by delta: Int, in items: [CartItem]) -> [CartItem] {
-        items.map { item in
-            guard item.id == productID else { return item }
-            var updated = item
-            updated.quantity = max(0, item.quantity + delta)
-            if updated.quantity == 0 { updated.isSelected = false }
-            persist(updated)
-            return updated
-        }
+        update(items, where: { $0.id == productID }, transform: { item in
+            item.quantity = max(0, item.quantity + delta)
+            if item.quantity == 0 {
+                item.isSelected = false
+            }
+        })
     }
 
     func select(_ selected: Bool, productID: String? = nil, in items: [CartItem]) -> [CartItem] {
-        items.map { item in
-            guard productID == nil || item.id == productID else { return item }
-            var updated = item
-            updated.isSelected = selected && item.quantity > 0
-            persist(updated)
-            return updated
-        }
+        update(items, where: { productID == nil || $0.id == productID }, transform: { item in
+            item.isSelected = selected && item.quantity > 0
+        })
     }
 
     func removeSelected(from items: [CartItem]) -> [CartItem] {
+        update(items, where: \.isSelected) { item in
+            item.quantity = 0
+            item.isSelected = false
+        }
+    }
+
+    private func update(_ items: [CartItem], where shouldUpdate: (CartItem) -> Bool,
+                        transform: (inout CartItem) -> Void) -> [CartItem] {
         items.map { item in
-            guard item.isSelected else { return item }
+            guard shouldUpdate(item) else { return item }
             var updated = item
-            updated.quantity = 0
-            updated.isSelected = false
+            transform(&updated)
             persist(updated)
             return updated
         }

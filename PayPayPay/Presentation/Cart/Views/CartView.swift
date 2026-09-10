@@ -10,12 +10,11 @@ import SwiftUI
 
 struct CartView: View {
     @EnvironmentObject var viewModel: CatalogViewModel
-    @State private var isEdited: Bool = false
+    @State private var isEditing = false
 
     var body: some View {
-        let goods = viewModel.state.items.filter { $0.quantity > 0 }
         NavigationView {
-            if goods.count == 0 {
+            if viewModel.state.cartItems.isEmpty {
                 VStack {
                     Image(systemName: "cart.fill.badge.plus")
                         .font(.system(size: 100, weight: .regular))
@@ -26,30 +25,20 @@ struct CartView: View {
                         .foregroundColor(.gray)
                 }
                 .navigationBarTitle("商品", displayMode: .inline)
-
             } else {
                 VStack {
-                    List(goods) { (model) in
+                    List(viewModel.state.cartItems) { model in
                         CartRowView(model: model)
                     }
 
-                    CartSummaryView(isEdited: $isEdited)
+                    CartSummaryView(isEditing: $isEditing)
                 }
-                .navigationBarItems(trailing:
-                    Button(action: {
-
-                        self.isEdited = !self.isEdited
-                    }, label: {
-
-                        Text(self.isEdited ? "完成" : "编辑")
-                            .foregroundColor(UIColor.textHeaderPrimary)
-                    })
-
-                )
+                .navigationBarItems(trailing: Button(isEditing ? "完成" : "编辑") {
+                    isEditing.toggle()
+                }
+                .foregroundColor(.textHeaderPrimary))
                 .navigationBarTitle("商品", displayMode: .inline)
-
             }
-
         }
     }
 }

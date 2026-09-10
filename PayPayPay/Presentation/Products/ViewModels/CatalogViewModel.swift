@@ -60,7 +60,6 @@ final class CatalogViewModel: ObservableObject {
         } catch {
             guard loadID == id else { return }
             state.error = (error as? RepositoryError) ?? .unknown
-            state.isShowingError = true
         }
     }
 
@@ -73,6 +72,5 @@ final class CatalogViewModel: ObservableObject {
 
     func dismissError() {
         state.error = nil
-        state.isShowingError = false
     }
 }

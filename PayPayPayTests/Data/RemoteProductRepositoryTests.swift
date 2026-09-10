@@ -54,6 +54,12 @@ final class RemoteProductRepositoryTests: XCTestCase {
         }
     }
 
+    func testMapsConnectivityErrors() {
+        XCTAssertEqual(RepositoryError(error: URLError(.notConnectedToInternet)),
+                       .notConnectionToInternet)
+        XCTAssertEqual(RepositoryError(error: URLError(.timedOut)), .notReachedServer)
+    }
+
     @MainActor
     func testRejectsMalformedPayloadAndEmptyIdentity() async {
         for payload in ["invalid JSON", #"[{"id":""}]"#, #"[{"name":"Missing ID"}]"#] {

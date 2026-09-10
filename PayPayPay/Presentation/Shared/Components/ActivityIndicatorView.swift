@@ -8,20 +8,14 @@
 
 import SwiftUI
 
-struct ActivityIndicatorView: UIViewRepresentable {
-
+struct ActivityIndicatorView: View {
     let isAnimating: Bool
-    let style: UIActivityIndicatorView.Style
 
-    func makeUIView(context: UIViewRepresentableContext<ActivityIndicatorView>) -> UIActivityIndicatorView {
-        return UIActivityIndicatorView(style: style)
-    }
-
-    func updateUIView(_ uiView: UIActivityIndicatorView, context: UIViewRepresentableContext<ActivityIndicatorView>) {
+    var body: some View {
         if isAnimating {
-            uiView.startAnimating()
-        } else {
-            uiView.stopAnimating()
+            ProgressView()
+                .progressViewStyle(.circular)
+                .controlSize(.large)
         }
     }
 }
