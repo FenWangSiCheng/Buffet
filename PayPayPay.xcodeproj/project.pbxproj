@@ -57,20 +57,11 @@
 		CCA62F432F40A66CCF2717F1 /* CatalogViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A56FDF68AB4F5824A7ED9E /* CatalogViewModelTests.swift */; };
 		EC6D9AE30A0178DD1EFFB935 /* DelayedTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC7FA22CABF1DFBC718DB3CB /* DelayedTaskTests.swift */; };
 		982CEF56214BB78FA29E036D /* RepositoryDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674CDE44BCBF29E81464632D /* RepositoryDoubles.swift */; };
-		F6760EDE41F8F309E1AAB28F /* AppLaunchPerformanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F54B37EDFFDDF5A5FC27A71 /* AppLaunchPerformanceTests.swift */; };
-		64398A4DE27920F7D6236F4D /* CatalogFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB281925E89D1FFEA9A35B59 /* CatalogFlowUITests.swift */; };
 		6DF66A797FC3E7324580543F /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02EB724B236DD913E873F60 /* AppEnvironment.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		1591F93224EBD8AE001AA4A7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 1591F91324EBD8AD001AA4A7 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 1591F91A24EBD8AD001AA4A7;
-			remoteInfo = PayPayPay;
-		};
-		1591F93D24EBD8AE001AA4A7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1591F91324EBD8AD001AA4A7 /* Project object */;
 			proxyType = 1;
@@ -88,8 +79,6 @@
 		1591F92C24EBD8AE001AA4A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1591F93124EBD8AE001AA4A7 /* PayPayPayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PayPayPayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1591F93724EBD8AE001AA4A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1591F93C24EBD8AE001AA4A7 /* PayPayPayUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PayPayPayUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		1591F94224EBD8AE001AA4A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		15B324EA25552CC500C36844 /* Products.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Products.json; sourceTree = "<group>"; };
 		27907B7B2CC7D228A7AFC40B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate.swift"; sourceTree = "<group>"; };
 		122E5AE023354A1C5CA45532 /* AppContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppContainer.swift"; sourceTree = "<group>"; };
@@ -135,8 +124,6 @@
 		62A56FDF68AB4F5824A7ED9E /* CatalogViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatalogViewModelTests.swift"; sourceTree = "<group>"; };
 		FC7FA22CABF1DFBC718DB3CB /* DelayedTaskTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DelayedTaskTests.swift"; sourceTree = "<group>"; };
 		674CDE44BCBF29E81464632D /* RepositoryDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RepositoryDoubles.swift"; sourceTree = "<group>"; };
-		5F54B37EDFFDDF5A5FC27A71 /* AppLaunchPerformanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppLaunchPerformanceTests.swift"; sourceTree = "<group>"; };
-		FB281925E89D1FFEA9A35B59 /* CatalogFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CatalogFlowUITests.swift"; sourceTree = "<group>"; };
 		1B0C51E74558BCE8241FC567 /* BaseProject.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = BaseProject.xcconfig; sourceTree = "<group>"; };
 		EFD629D125A88C9902E1F523 /* dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = dev.xcconfig; sourceTree = "<group>"; };
 		39503C733AF2D629B5D89FD3 /* stg.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = stg.xcconfig; sourceTree = "<group>"; };
@@ -159,13 +146,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1591F92E24EBD8AE001AA4A7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1591F93924EBD8AE001AA4A7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -490,22 +470,11 @@
 			path = "PayPayPayTests";
 			sourceTree = "<group>";
 		};
-		1591F93F24EBD8AE001AA4A7 /* PayPayPayUITests */ = {
-			isa = PBXGroup;
-			children = (
-				5F54B37EDFFDDF5A5FC27A71 /* AppLaunchPerformanceTests.swift */,
-				FB281925E89D1FFEA9A35B59 /* CatalogFlowUITests.swift */,
-				1591F94224EBD8AE001AA4A7 /* Info.plist */,
-			);
-			path = "PayPayPayUITests";
-			sourceTree = "<group>";
-		};
 		1591F91224EBD8AD001AA4A7 = {
 			isa = PBXGroup;
 			children = (
 				1591F91D24EBD8AD001AA4A7 /* PayPayPay */,
 				1591F93424EBD8AE001AA4A7 /* PayPayPayTests */,
-				1591F93F24EBD8AE001AA4A7 /* PayPayPayUITests */,
 				1591F91C24EBD8AD001AA4A7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -515,7 +484,6 @@
 			children = (
 				1591F91B24EBD8AD001AA4A7 /* PayPayPay.app */,
 				1591F93124EBD8AE001AA4A7 /* PayPayPayTests.xctest */,
-				1591F93C24EBD8AE001AA4A7 /* PayPayPayUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -593,24 +561,6 @@
 			productReference = 1591F93124EBD8AE001AA4A7 /* PayPayPayTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		1591F93B24EBD8AE001AA4A7 /* PayPayPayUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 1591F94B24EBD8AE001AA4A7 /* Build configuration list for PBXNativeTarget "PayPayPayUITests" */;
-			buildPhases = (
-				1591F93824EBD8AE001AA4A7 /* Sources */,
-				1591F93924EBD8AE001AA4A7 /* Frameworks */,
-				1591F93A24EBD8AE001AA4A7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				1591F93E24EBD8AE001AA4A7 /* PBXTargetDependency */,
-			);
-			name = PayPayPayUITests;
-			productName = PayPayPayUITests;
-			productReference = 1591F93C24EBD8AE001AA4A7 /* PayPayPayUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -626,10 +576,6 @@
 						LastSwiftMigration = 1160;
 					};
 					1591F93024EBD8AE001AA4A7 = {
-						CreatedOnToolsVersion = 11.5;
-						TestTargetID = 1591F91A24EBD8AD001AA4A7;
-					};
-					1591F93B24EBD8AE001AA4A7 = {
 						CreatedOnToolsVersion = 11.5;
 						TestTargetID = 1591F91A24EBD8AD001AA4A7;
 					};
@@ -654,7 +600,6 @@
 			targets = (
 				1591F91A24EBD8AD001AA4A7 /* PayPayPay */,
 				1591F93024EBD8AE001AA4A7 /* PayPayPayTests */,
-				1591F93B24EBD8AE001AA4A7 /* PayPayPayUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -672,13 +617,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1591F92F24EBD8AE001AA4A7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		1591F93A24EBD8AE001AA4A7 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -747,15 +685,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		1591F93824EBD8AE001AA4A7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				F6760EDE41F8F309E1AAB28F /* AppLaunchPerformanceTests.swift in Sources */,
-				64398A4DE27920F7D6236F4D /* CatalogFlowUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -763,11 +692,6 @@
 			isa = PBXTargetDependency;
 			target = 1591F91A24EBD8AD001AA4A7 /* PayPayPay */;
 			targetProxy = 1591F93224EBD8AE001AA4A7 /* PBXContainerItemProxy */;
-		};
-		1591F93E24EBD8AE001AA4A7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 1591F91A24EBD8AD001AA4A7 /* PayPayPay */;
-			targetProxy = 1591F93D24EBD8AE001AA4A7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1398,114 +1322,6 @@
 			};
 			name = "Release-pro";
 		};
-		3425BFBABB0FB0E03DB6708C /* Debug-dev */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 533H75UL22;
-				INFOPLIST_FILE = PayPayPayUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = PayPayPay;
-			};
-			name = "Debug-dev";
-		};
-		DB74A4D507AB7BEDEE5BB624 /* Debug-stg */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 533H75UL22;
-				INFOPLIST_FILE = PayPayPayUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = PayPayPay;
-			};
-			name = "Debug-stg";
-		};
-		0A147B2427DED931DF834D84 /* Debug-pro */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 533H75UL22;
-				INFOPLIST_FILE = PayPayPayUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = PayPayPay;
-			};
-			name = "Debug-pro";
-		};
-		1AB743A868FD86AA53C1FC0A /* Release-dev */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 533H75UL22;
-				INFOPLIST_FILE = PayPayPayUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = PayPayPay;
-			};
-			name = "Release-dev";
-		};
-		B002A53CD9A8096E4D115B61 /* Release-stg */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 533H75UL22;
-				INFOPLIST_FILE = PayPayPayUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = PayPayPay;
-			};
-			name = "Release-stg";
-		};
-		C94449A55ABC659EC58452DE /* Release-pro */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 533H75UL22;
-				INFOPLIST_FILE = PayPayPayUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_TARGET_NAME = PayPayPay;
-			};
-			name = "Release-pro";
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1544,19 +1360,6 @@
 				C30605A8E0D5649CF8F5548E /* Release-dev */,
 				4CDC374752C0B7A5FDF74FF9 /* Release-stg */,
 				614E6692D59F121DD90F8F4F /* Release-pro */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = "Release-pro";
-		};
-		1591F94B24EBD8AE001AA4A7 /* Build configuration list for PBXNativeTarget "PayPayPayUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3425BFBABB0FB0E03DB6708C /* Debug-dev */,
-				DB74A4D507AB7BEDEE5BB624 /* Debug-stg */,
-				0A147B2427DED931DF834D84 /* Debug-pro */,
-				1AB743A868FD86AA53C1FC0A /* Release-dev */,
-				B002A53CD9A8096E4D115B61 /* Release-stg */,
-				C94449A55ABC659EC58452DE /* Release-pro */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Release-pro";

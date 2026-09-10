@@ -84,7 +84,6 @@ PayPayPay/
 │   └── Shared/            # 通用组件、扩展与工具
 └── Resources/             # 图片、配置、启动页与样本数据
 PayPayPayTests/            # Domain、Data、Presentation 单元测试
-PayPayPayUITests/          # 商品流程与启动性能 UI 测试
 fastlane/                  # lint 与三环境打包入口
 ```
 
@@ -132,14 +131,13 @@ xcodebuild test \
   -scheme dev \
   -destination 'platform=iOS Simulator,id=<SIMULATOR_ID>' \
   -only-testing:PayPayPayTests \
-  -only-testing:PayPayPayUITests/CatalogFlowUITests \
   -onlyUsePackageVersionsFromResolvedFile \
   CODE_SIGNING_ALLOWED=NO
 ```
 
-将 `<SIMULATOR_ID>` 替换为本机可用设备 ID。上面的命令运行单元测试与商品流程 UI 测试，不包含启动性能测试。
+将 `<SIMULATOR_ID>` 替换为本机可用设备 ID。上面的命令运行项目的全部单元测试。
 
-单元测试覆盖购物车规则与持久化、HTTP 和解码错误、后台解码、请求取消、重复加载、旧请求结果隔离，以及 Toast 延迟关闭。商品流程 UI 测试覆盖样本加载、搜索与 Tab 导航。CI 当前不会运行这些测试，编译徽章不代表测试结果。
+单元测试覆盖购物车规则与持久化、HTTP 和解码错误、后台解码、请求取消、重复加载、旧请求结果隔离，以及 Toast 延迟关闭。CI 当前不会运行测试，编译徽章不代表测试结果。
 
 ## 代码检查与打包
 
