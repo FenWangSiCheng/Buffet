@@ -40,7 +40,8 @@ final class RemoteProductRepositoryTests: XCTestCase {
     func testMapsBackendFieldsAndImageURL() async throws {
         let data = Data(#"[{"id":"one","name":"Tea","original_price":"2.50","price":"2","image":"tea"}]"#.utf8)
         let products = try await makeRepository(data: data).fetchProducts(page: 0)
-        XCTAssertEqual(products[0].originalPrice, "2.50")
+        XCTAssertEqual(products[0].originalPrice, Money(decimalString: "2.50"))
+        XCTAssertEqual(products[0].price, Money(decimalString: "2"))
         XCTAssertEqual(products[0].imageURL?.absoluteString, "https://example.com/api/image/tea")
     }
 
@@ -62,7 +63,10 @@ final class RemoteProductRepositoryTests: XCTestCase {
 
     @MainActor
     func testRejectsMalformedPayloadAndEmptyIdentity() async {
-        for payload in ["invalid JSON", #"[{"id":""}]"#, #"[{"name":"Missing ID"}]"#] {
+        for payload in ["invalid JSON", #"[{"id":"","price":"1"}]"#,
+                        #"[{"name":"Missing ID","price":"1"}]"#,
+                        #"[{"id":"one","price":"invalid"}]"#,
+                        #"[{"id":"one","price":"-1"}]"#] {
             do {
                 _ = try await makeRepository(data: Data(payload.utf8)).fetchProducts(page: 0)
                 XCTFail("Expected invalid data")

@@ -1,10 +1,9 @@
-import Combine
 import XCTest
 @testable import PayPayPay
 
 final class CatalogViewModelTests: XCTestCase {
     @MainActor
-    private func makeViewModel(_ repository: ProductRepository) -> CatalogViewModel {
+    private func makeViewModel(_ repository: any ProductRepository) -> CatalogViewModel {
         let cart = ManageCartUseCase(repository: InMemoryCartRepository())
         return CatalogViewModel(loadProducts: LoadProductsUseCase(repository: repository, cart: cart),
                                 manageCart: cart)
@@ -14,17 +13,17 @@ final class CatalogViewModelTests: XCTestCase {
     func testFailureFinishesLoadingAndPreservesExistingItems() async {
         let repository = StubProductRepository()
         let viewModel = makeViewModel(repository)
-        await viewModel.loadProducts()
-        viewModel.dispatch(.increaseQuantity(productID: "one"))
+        await viewModel.load()
+        await viewModel.increaseQuantity(productID: "one")
         repository.result = .failure(RepositoryError.notReachedServer)
-        await viewModel.loadProducts()
+        await viewModel.load()
         XCTAssertFalse(viewModel.state.isLoading)
         XCTAssertTrue(viewModel.state.isShowingError)
-        XCTAssertEqual(viewModel.state.error, .notReachedServer)
+        XCTAssertEqual(viewModel.state.errorMessage, RepositoryError.notReachedServer.errorDescription())
         XCTAssertEqual(viewModel.state.items[0].quantity, 1)
         repository.result = .success([Product(id: "one")])
-        await viewModel.loadProducts()
-        XCTAssertNil(viewModel.state.error)
+        await viewModel.load()
+        XCTAssertNil(viewModel.state.errorMessage)
         XCTAssertFalse(viewModel.state.isShowingError)
         XCTAssertEqual(viewModel.state.items[0].quantity, 1)
     }
@@ -35,10 +34,10 @@ final class CatalogViewModelTests: XCTestCase {
         let started = expectation(description: "Request started")
         repository.onRequest = { started.fulfill() }
         let viewModel = makeViewModel(repository)
-        let task = Task { await viewModel.loadProducts() }
+        let task = Task { await viewModel.load() }
         await fulfillment(of: [started], timeout: 1)
         XCTAssertTrue(viewModel.state.isLoading)
-        await viewModel.loadProducts()
+        await viewModel.load()
         XCTAssertEqual(repository.pages.count, 1)
         repository.continuations[0].resume(returning: [])
         await task.value
@@ -51,12 +50,13 @@ final class CatalogViewModelTests: XCTestCase {
         let firstStarted = expectation(description: "First request")
         repository.onRequest = { firstStarted.fulfill() }
         let viewModel = makeViewModel(repository)
-        let first = Task { await viewModel.loadProducts() }
+        let first = Task { await viewModel.load() }
         await fulfillment(of: [firstStarted], timeout: 1)
         viewModel.cancelLoading()
+        first.cancel()
         let secondStarted = expectation(description: "Second request")
         repository.onRequest = { secondStarted.fulfill() }
-        let second = Task { await viewModel.loadProducts() }
+        let second = Task { await viewModel.load() }
         await fulfillment(of: [secondStarted], timeout: 1)
         repository.continuations[1].resume(returning: [Product(id: "new")])
         await second.value
@@ -72,17 +72,16 @@ final class CatalogViewModelTests: XCTestCase {
         let repository = ControlledProductRepository()
         let started = expectation(description: "Fresh request")
         repository.onRequest = { started.fulfill() }
-        let loaded = expectation(description: "Fresh result")
         let viewModel = makeViewModel(repository)
-        let subscription = viewModel.$state.filter { !$0.items.isEmpty }.prefix(1).sink { _ in loaded.fulfill() }
-        viewModel.dispatch(.loadProducts)
-        viewModel.cancelLoading()
-        viewModel.dispatch(.loadProducts)
+        let cancelled = Task { await viewModel.load() }
+        cancelled.cancel()
+        await cancelled.value
+        let fresh = Task { await viewModel.load() }
         await fulfillment(of: [started], timeout: 1)
         XCTAssertEqual(repository.pages.count, 1)
         repository.continuations[0].resume(returning: [Product(id: "fresh")])
-        await fulfillment(of: [loaded], timeout: 1)
-        withExtendedLifetime(subscription) {}
+        await fresh.value
+        XCTAssertEqual(viewModel.state.items.map(\.id), ["fresh"])
     }
 
     @MainActor
@@ -90,25 +89,25 @@ final class CatalogViewModelTests: XCTestCase {
         let repository = StubProductRepository()
         repository.result = .failure(CancellationError())
         let viewModel = makeViewModel(repository)
-        await viewModel.loadProducts()
+        await viewModel.load()
         XCTAssertFalse(viewModel.state.isLoading)
         XCTAssertFalse(viewModel.state.isShowingError)
-        XCTAssertNil(viewModel.state.error)
+        XCTAssertNil(viewModel.state.errorMessage)
     }
 
     @MainActor
-    func testCartActionsDriveBadgeTotalAndEmptyState() async {
+    func testCartMethodsDriveBadgeTotalAndEmptyState() async {
         let viewModel = makeViewModel(StubProductRepository())
         XCTAssertFalse(viewModel.state.isAllSelected)
-        XCTAssertEqual(viewModel.state.totalPrice, 0)
-        await viewModel.loadProducts()
-        viewModel.dispatch(.increaseQuantity(productID: "one"))
-        viewModel.dispatch(.increaseQuantity(productID: "one"))
-        viewModel.dispatch(.selectAll)
+        XCTAssertEqual(viewModel.state.totalPrice, .zero)
+        await viewModel.load()
+        await viewModel.increaseQuantity(productID: "one")
+        await viewModel.increaseQuantity(productID: "one")
+        await viewModel.setAllSelected(true)
         XCTAssertEqual(viewModel.state.cartItemCount, 1)
-        XCTAssertEqual(viewModel.state.totalPrice, 0.4, accuracy: 0.0001)
+        XCTAssertEqual(viewModel.state.totalPrice, Money(decimalString: "0.4"))
         XCTAssertTrue(viewModel.state.isAllSelected)
-        viewModel.dispatch(.removeSelected)
+        await viewModel.removeSelected()
         XCTAssertEqual(viewModel.state.cartItemCount, 0)
         XCTAssertFalse(viewModel.state.hasSelection)
         XCTAssertFalse(viewModel.state.isAllSelected)

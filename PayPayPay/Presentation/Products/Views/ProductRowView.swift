@@ -10,8 +10,9 @@ import SwiftUI
 import Kingfisher
 
 struct ProductRowView: View {
-    @EnvironmentObject var viewModel: CatalogViewModel
     let model: CartItem
+    let onDecrease: () -> Void
+    let onIncrease: () -> Void
 
     var body: some View {
 
@@ -45,17 +46,15 @@ struct ProductRowView: View {
                         .foregroundColor(.gray)
                     Spacer()
                     if model.quantity > 0 {
-                        quantityButton(systemImage: "minus.circle.fill", label: "减少数量") {
-                            viewModel.dispatch(.decreaseQuantity(productID: model.id))
-                        }
+                        quantityButton(systemImage: "minus.circle.fill", label: "减少数量",
+                                       action: onDecrease)
 
                         Text(model.quantityText)
                             .font(.footnote)
                     }
 
-                    quantityButton(systemImage: "plus.circle.fill", label: "增加数量") {
-                        viewModel.dispatch(.increaseQuantity(productID: model.id))
-                    }
+                    quantityButton(systemImage: "plus.circle.fill", label: "增加数量",
+                                   action: onIncrease)
                 }
             }
             Spacer()

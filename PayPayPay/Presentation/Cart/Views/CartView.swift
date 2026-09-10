@@ -28,10 +28,34 @@ struct CartView: View {
             } else {
                 VStack {
                     List(viewModel.state.cartItems) { model in
-                        CartRowView(model: model)
+                        CartRowView(
+                            model: model,
+                            onToggleSelection: {
+                                Task {
+                                    await viewModel.setItemSelected(!model.isSelected, productID: model.id)
+                                }
+                            },
+                            onDecrease: {
+                                Task { await viewModel.decreaseQuantity(productID: model.id) }
+                            },
+                            onIncrease: {
+                                Task { await viewModel.increaseQuantity(productID: model.id) }
+                            }
+                        )
                     }
 
-                    CartSummaryView(isEditing: $isEditing)
+                    CartSummaryView(
+                        isEditing: $isEditing,
+                        isAllSelected: viewModel.state.isAllSelected,
+                        totalPrice: viewModel.state.totalPrice,
+                        hasSelection: viewModel.state.hasSelection,
+                        onToggleAll: {
+                            Task { await viewModel.setAllSelected(!viewModel.state.isAllSelected) }
+                        },
+                        onRemoveSelected: {
+                            Task { await viewModel.removeSelected() }
+                        }
+                    )
                 }
                 .navigationBarItems(trailing: Button(isEditing ? "完成" : "编辑") {
                     isEditing.toggle()

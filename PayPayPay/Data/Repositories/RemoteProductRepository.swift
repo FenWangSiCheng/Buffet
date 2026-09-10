@@ -1,7 +1,6 @@
 import Foundation
 
-@MainActor
-final class RemoteProductRepository: ProductRepository {
+actor RemoteProductRepository: ProductRepository {
     private let client: ProductAPIClient
     private let baseURL: URL
 

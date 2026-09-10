@@ -3,17 +3,26 @@ import Foundation
 
 @MainActor
 final class InMemoryCartRepository: CartRepository {
-    var counts: [String: Int] = [:]
-    var selections: [String: Bool] = [:]
-    func count(for productID: String) -> Int { counts[productID, default: 0] }
-    func setCount(_ count: Int, for productID: String) { counts[productID] = count }
-    func isSelected(for productID: String) -> Bool { selections[productID, default: false] }
-    func setSelected(_ selected: Bool, for productID: String) { selections[productID] = selected }
+    private(set) var cart: Cart
+
+    init(cart: Cart = Cart()) {
+        self.cart = cart
+    }
+
+    func load(for productIDs: [String]) -> Cart {
+        cart
+    }
+
+    func save(_ cart: Cart) {
+        self.cart = cart
+    }
 }
 
 @MainActor
 final class StubProductRepository: ProductRepository {
-    var result: Result<[Product], Error> = .success([Product(id: "one", price: "0.2")])
+    var result: Result<[Product], Error> = .success([
+        Product(id: "one", price: Money(decimalString: "0.2")!)
+    ])
     func fetchProducts(page: Int) async throws -> [Product] { try result.get() }
 }
 

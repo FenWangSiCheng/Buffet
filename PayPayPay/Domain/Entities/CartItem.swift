@@ -6,5 +6,5 @@ struct CartItem: Equatable, Identifiable, Sendable {
     var isSelected: Bool = false
 
     var id: String { product.id }
-    var subtotal: Double { (Double(product.price ?? "0") ?? 0) * Double(quantity) }
+    var subtotal: Money { product.price * quantity }
 }

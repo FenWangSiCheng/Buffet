@@ -9,19 +9,23 @@
 import SwiftUI
 
 struct CartSummaryView: View {
-    @EnvironmentObject var viewModel: CatalogViewModel
     @Binding var isEditing: Bool
+    let isAllSelected: Bool
+    let totalPrice: Money
+    let hasSelection: Bool
+    let onToggleAll: () -> Void
+    let onRemoveSelected: () -> Void
 
     var body: some View {
         HStack {
             Spacer().frame(width: 20)
             Button {
-                viewModel.dispatch(viewModel.state.isAllSelected ? .deselectAll : .selectAll)
+                onToggleAll()
             } label: {
                 HStack {
-                    Image(systemName: viewModel.state.isAllSelected ? "checkmark.circle.fill" : "circle")
+                    Image(systemName: isAllSelected ? "checkmark.circle.fill" : "circle")
                         .font(.system(size: 16, weight: .regular))
-                        .foregroundColor(viewModel.state.isAllSelected ? .red : .gray)
+                        .foregroundColor(isAllSelected ? .red : .gray)
                     Text("全选")
                         .font(.footnote)
                 }
@@ -29,7 +33,7 @@ struct CartSummaryView: View {
             .buttonStyle(.plain)
 
             if !isEditing {
-                Text("合计：\(viewModel.state.totalPrice.formattedPrice)")
+                Text("合计：\(totalPrice.formattedPrice)")
                     .font(.footnote)
             }
 
@@ -37,15 +41,15 @@ struct CartSummaryView: View {
 
             Button(isEditing ? "删 除" : "付 款") {
                 if isEditing {
-                    viewModel.dispatch(.removeSelected)
+                    onRemoveSelected()
                 }
             }
             .font(.footnote)
-            .foregroundColor(viewModel.state.hasSelection ? .black : .white)
+            .foregroundColor(hasSelection ? .black : .white)
             .frame(width: 120, height: 30)
-            .background(viewModel.state.hasSelection ? Color.red : Color.gray)
+            .background(hasSelection ? Color.red : Color.gray)
             .clipShape(Capsule())
-            .disabled(!viewModel.state.hasSelection)
+            .disabled(!hasSelection)
 
             Spacer().frame(width: 20)
         }

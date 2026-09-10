@@ -2,3 +2,17 @@
 included:
   - PayPayPay
   - PayPayPayTests
+
+custom_rules:
+  domain_framework_dependency:
+    included: "PayPayPay/Domain/.*\\.swift"
+    name: "Domain Framework Dependency"
+    regex: "(?m)^import (SwiftUI|UIKit|Moya|Kingfisher)$"
+    message: "Domain must not import UI or data frameworks."
+    severity: error
+  data_ui_dependency:
+    included: "PayPayPay/Data/.*\\.swift"
+    name: "Data UI Dependency"
+    regex: "(?m)^import (SwiftUI|UIKit)$"
+    message: "Data must not import UI frameworks."
+    severity: error

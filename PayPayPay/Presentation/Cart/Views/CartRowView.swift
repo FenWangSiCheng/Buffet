@@ -9,15 +9,15 @@
 import SwiftUI
 
 struct CartRowView: View {
-    @EnvironmentObject var viewModel: CatalogViewModel
     let model: CartItem
+    let onToggleSelection: () -> Void
+    let onDecrease: () -> Void
+    let onIncrease: () -> Void
 
     var body: some View {
         HStack {
             Button {
-                viewModel.dispatch(model.isSelected
-                    ? .deselectItem(productID: model.id)
-                    : .selectItem(productID: model.id))
+                onToggleSelection()
             } label: {
                 Image(systemName: model.isSelected ? "checkmark.circle.fill" : "circle")
                     .font(.system(size: 20, weight: .regular))
@@ -26,7 +26,7 @@ struct CartRowView: View {
             .buttonStyle(.plain)
             .accessibilityLabel(model.isSelected ? "取消选择" : "选择商品")
 
-            ProductRowView(model: model)
+            ProductRowView(model: model, onDecrease: onDecrease, onIncrease: onIncrease)
         }
     }
 }

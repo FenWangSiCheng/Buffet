@@ -26,7 +26,11 @@ struct ProductListView: View {
                         .padding(.top, 10)
 
                     List(filteredItems) { model in
-                        ProductRowView(model: model)
+                        ProductRowView(
+                            model: model,
+                            onDecrease: { Task { await viewModel.decreaseQuantity(productID: model.id) } },
+                            onIncrease: { Task { await viewModel.increaseQuantity(productID: model.id) } }
+                        )
                     }
                     .simultaneousGesture(TapGesture().onEnded(dismissKeyboard))
                 }
@@ -46,13 +50,13 @@ struct ProductListView: View {
             }
             .navigationBarTitle("首页", displayMode: .inline)
         }
-        .onAppear { viewModel.dispatch(.loadProducts) }
+        .task { await viewModel.load() }
         .toast(
             isShowing: Binding(
                 get: { viewModel.state.isShowingError },
                 set: { if !$0 { viewModel.dismissError() } }
             ),
-            text: Text(viewModel.state.error?.errorDescription() ?? "")
+            text: Text(viewModel.state.errorMessage ?? "")
         )
     }
 

@@ -8,11 +8,11 @@ final class LoadProductsUseCaseTests: XCTestCase {
         let cart = InMemoryCartRepository()
         let started = expectation(description: "Request started")
         products.onRequest = { started.fulfill() }
-        let useCase = LoadProductsUseCase(repository: products, cart: ManageCartUseCase(repository: cart))
+        let manageCart = ManageCartUseCase(repository: cart)
+        let useCase = LoadProductsUseCase(repository: products, cart: manageCart)
         let task = Task { try await useCase.execute(page: 2) }
         await fulfillment(of: [started], timeout: 1)
-        cart.counts["one"] = 3
-        cart.selections["one"] = true
+        cart.save(Cart(entries: ["one": Cart.Entry(quantity: 3, isSelected: true)]))
         products.continuations[0].resume(returning: [Product(id: "one")])
         let items = try await task.value
         XCTAssertEqual(products.pages, [2])

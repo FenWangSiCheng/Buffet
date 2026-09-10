@@ -16,9 +16,24 @@ struct ProductDTO: Decodable, Sendable {
     }
 
     func toDomain(imageBaseURL: URL) throws -> Product {
-        guard !id.isEmpty else { throw RepositoryError.incorrectDataReturned }
-        return Product(id: id, name: name,
+        guard !id.isEmpty,
+              let price,
+              let domainPrice = Money(decimalString: price),
+              domainPrice >= .zero else {
+            throw RepositoryError.incorrectDataReturned
+        }
+        let domainOriginalPrice = try originalPrice.map { value in
+            guard let money = Money(decimalString: value) else {
+                throw RepositoryError.incorrectDataReturned
+            }
+            guard money >= .zero else {
+                throw RepositoryError.incorrectDataReturned
+            }
+            return money
+        }
+        return Product(id: id, name: name ?? "",
                        imageURL: image.map { imageBaseURL.appendingPathComponent($0) },
-                       originalPrice: originalPrice, price: price, sold: sold, barcode: barcode)
+                       originalPrice: domainOriginalPrice, price: domainPrice,
+                       sold: sold ?? 0, barcode: barcode)
     }
 }

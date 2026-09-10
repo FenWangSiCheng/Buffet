@@ -69,7 +69,7 @@ README 顶部徽章显示 **main 分支最近一次 push** 的构建结果：成
 PayPayPay/
 ├── Application/           # 应用生命周期、环境读取、依赖装配、Preview
 ├── Domain/
-│   ├── Entities/          # Product、CartItem
+│   ├── Entities/          # Product、Money、Cart、CartItem
 │   ├── Errors/            # 业务错误
 │   ├── Repositories/      # 仓储协议
 │   └── UseCases/          # 加载商品、管理购物车
@@ -89,7 +89,7 @@ fastlane/                  # lint 与三环境打包入口
 
 依赖方向为 `Presentation → Domain ← Data`，由 `Application/AppContainer` 装配具体实现。目前业务代码位于单个应用 Target，尚未拆分为独立 Package。
 
-`CatalogViewModel` 使用 `ObservableObject` / Combine 驱动 SwiftUI 更新；视图通过 Action 发起操作，购物车规则由 Use Case 处理。首页与购物车共享同一个 ViewModel。网络层将 Moya 回调桥接为 async/await，在后台解码，并通过 MainActor 更新界面状态。
+`CatalogViewModel` 使用 `ObservableObject` / Combine 驱动 SwiftUI 更新，并通过明确的 MVVM 方法接收界面事件。叶子视图只接收展示值与事件闭包。首页与购物车共享同一个 ViewModel，购物车规则由 actor 隔离的 Use Case 串行处理，并通过单一快照原子持久化。金额在 Domain 中使用 `Money` / `Decimal` 表达，在 DTO 边界完成校验。网络层将 Moya 回调桥接为 async/await，在后台解码，仅由 MainActor 更新界面状态。
 
 ## 环境配置
 
