@@ -15,19 +15,20 @@ actor ManageCartUseCase {
     }
 
     func changeQuantity(of productID: String, by delta: Int) async -> [CartItem] {
-        cart.changeQuantity(of: productID, by: delta)
-        await repository.save(cart)
-        return currentItems
+        await updateCart { $0.changeQuantity(of: productID, by: delta) }
     }
 
     func select(_ selected: Bool, productID: String? = nil) async -> [CartItem] {
-        cart.setSelected(selected, productID: productID)
-        await repository.save(cart)
-        return currentItems
+        await updateCart { $0.setSelected(selected, productID: productID) }
     }
 
     func removeSelected() async -> [CartItem] {
-        cart.removeSelected()
+        await updateCart { $0.removeSelected() }
+    }
+
+    /// Applies `change` to the cart, persists the result, then returns the new items.
+    private func updateCart(_ change: (inout Cart) -> Void) async -> [CartItem] {
+        change(&cart)
         await repository.save(cart)
         return currentItems
     }

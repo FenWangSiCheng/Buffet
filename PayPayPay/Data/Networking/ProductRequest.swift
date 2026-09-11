@@ -19,14 +19,14 @@ final class ProductRequest<Value: Decodable & Sendable> {
         // only Sendable results back to the actor that owns request bookkeeping.
         cancellable = provider.request(endpoint, callbackQueue: .global(qos: .userInitiated)) { @Sendable response in
             // Convert framework objects into Sendable values before entering the main actor.
-            let result: Result<Value, RepositoryError>
+            let result: Result<Value, Error>
             do {
                 result = .success(try response.get().filterSuccessfulStatusCodes().map(Value.self))
             } catch {
                 result = .failure(RepositoryError(error: error))
             }
             _Concurrency.Task { @MainActor in
-                self.finish(result.mapError { $0 as Error })
+                self.finish(result)
             }
         }
     }

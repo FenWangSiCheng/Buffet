@@ -31,33 +31,15 @@ struct CatalogState {
         recomputeDerivedValues()
     }
 
-    /// Rebuilds every derived value in one pass, so view bodies never have to filter or reduce.
+    /// Rebuilds every derived value, so view bodies never have to filter or reduce.
     private mutating func recomputeDerivedValues() {
-        var visible: [CartItem] = []
-        var cart: [CartItem] = []
-        var hasSelection = false
-        var allSelected = true
-        var total = Money.zero
+        visibleItems = items.filter { searchText.isEmpty || $0.nameText.localizedStandardContains(searchText) }
+        cartItems = items.filter { $0.quantity > 0 }
 
-        for item in items {
-            if searchText.isEmpty || item.nameText.localizedStandardContains(searchText) {
-                visible.append(item)
-            }
-            guard item.quantity > 0 else { continue }
-            cart.append(item)
-            if item.isSelected {
-                hasSelection = true
-                total += item.subtotal
-            } else {
-                allSelected = false
-            }
-        }
-
-        visibleItems = visible
-        cartItems = cart
-        cartItemCount = cart.count
-        self.hasSelection = hasSelection
-        isAllSelected = !cart.isEmpty && allSelected
-        totalPrice = total
+        let selectedItems = cartItems.filter(\.isSelected)
+        cartItemCount = cartItems.count
+        hasSelection = !selectedItems.isEmpty
+        isAllSelected = !cartItems.isEmpty && selectedItems.count == cartItems.count
+        totalPrice = selectedItems.reduce(Money.zero) { $0 + $1.subtotal }
     }
 }

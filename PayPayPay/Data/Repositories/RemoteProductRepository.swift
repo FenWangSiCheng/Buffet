@@ -12,8 +12,10 @@ actor RemoteProductRepository: ProductRepository {
     func fetchProducts(page: Int) async throws -> [Product] {
         do {
             let response: [ProductDTO] = try await client.request(.products(baseURL: baseURL, page: page))
-            return try response.map { try $0.toDomain(imageBaseURL: baseURL.appendingPathComponent("image")) }
+            let imageBaseURL = baseURL.appendingPathComponent("image")
+            return try response.map { try $0.toDomain(imageBaseURL: imageBaseURL) }
         } catch is CancellationError {
+            // Cancellation has to stay distinguishable from a failure, so callers can ignore stale results.
             throw CancellationError()
         } catch {
             throw RepositoryError(error: error)

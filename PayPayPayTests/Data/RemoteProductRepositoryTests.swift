@@ -12,28 +12,28 @@ final class RemoteProductRepositoryTests: XCTestCase {
     }
 
     @MainActor
-    func testDecodingDoesNotBlockMainThread() async throws {
-        let provider = MoyaProvider<ProductEndpoint>(endpointClosure: { target in
-            Endpoint(url: target.baseURL.absoluteString + target.path,
-                     sampleResponseClosure: { @Sendable in .networkResponse(200, Data("{}".utf8)) },
-                     method: target.method, task: target.task, httpHeaderFields: nil)
-        }, stubClosure: MoyaProvider.immediatelyStub)
-        let client = ProductAPIClient(provider: provider)
-        let probe: DecodingProbe = try await client.request(
-            .products(baseURL: URL(string: "https://example.com")!, page: 0)
-        )
-        XCTAssertFalse(probe.decodedOnMainThread)
-    }
-
-    @MainActor
-    private func makeRepository(status: Int = 200, data: Data, delay: TimeInterval = 0) -> RemoteProductRepository {
-        let provider = MoyaProvider<ProductEndpoint>(endpointClosure: { target in
+    private func makeProvider(data: Data, status: Int = 200,
+                              delay: TimeInterval = 0) -> MoyaProvider<ProductEndpoint> {
+        MoyaProvider<ProductEndpoint>(endpointClosure: { target in
             Endpoint(url: target.baseURL.absoluteString + target.path,
                      sampleResponseClosure: { @Sendable in .networkResponse(status, data) },
                      method: target.method, task: target.task, httpHeaderFields: nil)
         }, stubClosure: { _ in delay == 0 ? .immediate : .delayed(seconds: delay) })
-        return RemoteProductRepository(client: ProductAPIClient(provider: provider),
-                                       baseURL: URL(string: "https://example.com/api")!)
+    }
+
+    @MainActor
+    private func makeRepository(data: Data, status: Int = 200, delay: TimeInterval = 0) -> RemoteProductRepository {
+        let client = ProductAPIClient(provider: makeProvider(data: data, status: status, delay: delay))
+        return RemoteProductRepository(client: client, baseURL: URL(string: "https://example.com/api")!)
+    }
+
+    @MainActor
+    func testDecodingDoesNotBlockMainThread() async throws {
+        let client = ProductAPIClient(provider: makeProvider(data: Data("{}".utf8)))
+        let probe: DecodingProbe = try await client.request(
+            .products(baseURL: URL(string: "https://example.com")!, page: 0)
+        )
+        XCTAssertFalse(probe.decodedOnMainThread)
     }
 
     @MainActor
@@ -48,7 +48,7 @@ final class RemoteProductRepositoryTests: XCTestCase {
     @MainActor
     func testRejectsHTTPFailureBeforeDecoding() async {
         do {
-            _ = try await makeRepository(status: 503, data: Data("[]".utf8)).fetchProducts(page: 0)
+            _ = try await makeRepository(data: Data("[]".utf8), status: 503).fetchProducts(page: 0)
             XCTFail("Expected server maintenance")
         } catch {
             XCTAssertEqual(error as? RepositoryError, .serverMaintenance)

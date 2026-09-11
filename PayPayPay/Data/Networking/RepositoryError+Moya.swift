@@ -3,23 +3,28 @@ import Moya
 
 extension RepositoryError {
     init(error: Error) {
-        if let repositoryError = error as? RepositoryError {
+        switch error {
+        case let repositoryError as RepositoryError:
             self = repositoryError
-        } else if let urlError = error as? URLError {
+        case let urlError as URLError:
             self.init(urlError: urlError)
-        } else if let moyaError = error as? MoyaError {
-            switch moyaError {
-            case .jsonMapping, .objectMapping, .stringMapping:
-                self = .incorrectDataReturned
-            case .statusCode(let response):
-                self.init(statusCode: response.statusCode)
-            case .underlying(let error, _):
-                self.init(error: error)
-            default:
-                self = .response(message: moyaError.errorDescription ?? "")
-            }
-        } else {
+        case let moyaError as MoyaError:
+            self.init(moyaError: moyaError)
+        default:
             self = .unknown
+        }
+    }
+
+    private init(moyaError: MoyaError) {
+        switch moyaError {
+        case .jsonMapping, .objectMapping, .stringMapping:
+            self = .incorrectDataReturned
+        case .statusCode(let response):
+            self.init(statusCode: response.statusCode)
+        case .underlying(let error, _):
+            self.init(error: error)
+        default:
+            self = .response(message: moyaError.errorDescription ?? "")
         }
     }
 
