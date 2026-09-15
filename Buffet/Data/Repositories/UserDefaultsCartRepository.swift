@@ -21,16 +21,15 @@ final class UserDefaultsCartRepository: CartRepository {
         }
 
         // No snapshot yet: migrate the per-product keys written by the first version, then keep the snapshot.
-        let legacyEntries: [String: StoredEntry] = Dictionary(
-            uniqueKeysWithValues: productIDs.compactMap { productID -> (String, StoredEntry)? in
-                let quantity = max(0, defaults.integer(forKey: "cart.count.\(productID)"))
-                guard quantity > 0 else { return nil }
-                return (productID, StoredEntry(
-                    quantity: quantity,
-                    isSelected: defaults.bool(forKey: "cart.selected.\(productID)")
-                ))
-            }
-        )
+        var legacyEntries: [String: StoredEntry] = [:]
+        for productID in productIDs {
+            let quantity = max(0, defaults.integer(forKey: "cart.count.\(productID)"))
+            guard quantity > 0 else { continue }
+            legacyEntries[productID] = StoredEntry(
+                quantity: quantity,
+                isSelected: defaults.bool(forKey: "cart.selected.\(productID)")
+            )
+        }
         let cart = makeCart(from: legacyEntries)
         saveSnapshot(cart)
         return cart

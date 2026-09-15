@@ -5,8 +5,8 @@ import XCTest
 final class AppModelTests: XCTestCase {
     private func makeAppModel(_ repository: any ProductRepository) -> AppModel {
         let cart = ManageCartUseCase(repository: InMemoryCartRepository())
-        return AppModel(catalog: CatalogStore(loadProducts: LoadProductsUseCase(repository: repository,
-                                                                                cart: cart)),
+        let loadProducts = LoadProductsUseCase(repository: repository, cart: cart)
+        return AppModel(catalog: CatalogStore(loadProducts: loadProducts),
                         cart: CartStore(manageCart: cart))
     }
 

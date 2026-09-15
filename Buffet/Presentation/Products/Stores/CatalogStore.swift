@@ -54,7 +54,8 @@ final class CatalogStore {
             return nil
         } catch {
             guard loadID == id else { return nil }
-            errorMessage = ((error as? RepositoryError) ?? .unknown).errorDescription
+            let repositoryError = (error as? RepositoryError) ?? .unknown
+            errorMessage = repositoryError.errorDescription
             return nil
         }
     }

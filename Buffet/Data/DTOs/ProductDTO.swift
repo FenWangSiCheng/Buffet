@@ -19,10 +19,10 @@ struct ProductDTO: Decodable, Sendable {
         guard !id.isEmpty, let price else {
             throw RepositoryError.invalidData
         }
+        let imageURL = image.map { imageBaseURL.appendingPathComponent($0) }
         let domainPrice = try nonNegativeMoney(price)
-        let domainOriginalPrice = try originalPrice.map(nonNegativeMoney)
-        return Product(id: id, name: name ?? "",
-                       imageURL: image.map { imageBaseURL.appendingPathComponent($0) },
+        let domainOriginalPrice = try originalPrice.map { try nonNegativeMoney($0) }
+        return Product(id: id, name: name ?? "", imageURL: imageURL,
                        originalPrice: domainOriginalPrice, price: domainPrice,
                        sold: sold ?? 0, barcode: barcode)
     }

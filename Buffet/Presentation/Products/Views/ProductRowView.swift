@@ -12,7 +12,7 @@ struct ProductRowView: View {
                 .frame(width: Theme.thumbnailSize, height: Theme.thumbnailSize)
 
             VStack(alignment: .leading, spacing: 6) {
-                Text(model.nameText)
+                Text(model.product.name)
                     .font(.subheadline)
                     .lineLimit(2)
                     .foregroundStyle(Color.textHeaderPrimary)

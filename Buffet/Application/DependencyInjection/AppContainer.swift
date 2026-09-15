@@ -10,8 +10,8 @@ enum AppContainer {
         let client = ProductAPIClient(provider: provider)
         let products = RemoteProductRepository(client: client, baseURL: AppEnvironment.apiBaseURL)
         let cart = ManageCartUseCase(repository: UserDefaultsCartRepository(defaults: defaults))
-        return AppModel(catalog: CatalogStore(loadProducts: LoadProductsUseCase(repository: products,
-                                                                                cart: cart)),
+        let loadProducts = LoadProductsUseCase(repository: products, cart: cart)
+        return AppModel(catalog: CatalogStore(loadProducts: loadProducts),
                         cart: CartStore(manageCart: cart))
     }
 }

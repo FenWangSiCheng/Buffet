@@ -7,7 +7,7 @@ struct ProductListView: View {
         @Bindable var catalog = app.catalog
 
         NavigationStack {
-            List(app.catalog.visibleProducts) { product in
+            List(catalog.visibleProducts) { product in
                 ProductRowView(
                     model: app.cart.item(for: product),
                     onDecrease: { decreaseQuantity(of: product) },
@@ -19,9 +19,9 @@ struct ProductListView: View {
             .safeAreaInset(edge: .bottom) { scanBadge }
             .navigationTitle("首页")
             .searchable(text: $catalog.searchText, prompt: Text("搜索商品"))
-            .overlay { ActivityIndicatorView(isAnimating: app.catalog.isLoading) }
+            .overlay { ActivityIndicatorView(isAnimating: catalog.isLoading) }
             .task { await app.loadCatalog() }
-            .toast(message: app.catalog.errorMessage) { app.catalog.dismissError() }
+            .toast(message: catalog.errorMessage) { catalog.dismissError() }
         }
     }
 
