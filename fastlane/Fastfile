@@ -33,7 +33,7 @@ platform :ios do
   private_lane :package_app do |options|
     lint
     root = File.expand_path("..", __dir__)
-    project = File.join(root, "PayPayPay.xcodeproj")
+    project = File.join(root, "Buffet.xcodeproj")
     scheme = options.fetch(:scheme)
     configuration = "Release-#{scheme}"
     method = (options[:export_method] || options.fetch(:default_method)).to_s
@@ -52,8 +52,8 @@ platform :ios do
       "-destination", "generic/platform=iOS", "-disableAutomaticPackageResolution"
     )
     UI.user_error!("Cannot read build settings: #{stderr}") unless status.success?
-    target = JSON.parse(settings_json).find { |entry| entry["target"] == "PayPayPay" }
-    UI.user_error!("PayPayPay target is missing from #{scheme}") unless target
+    target = JSON.parse(settings_json).find { |entry| entry["target"] == "Buffet" }
+    UI.user_error!("Buffet target is missing from #{scheme}") unless target
     settings = target.fetch("buildSettings")
     version = settings.fetch("MARKETING_VERSION")
     build_number = settings.fetch("CURRENT_PROJECT_VERSION")
@@ -61,7 +61,7 @@ platform :ios do
     UI.user_error!("Set FASTLANE_TEAM_ID or the Xcode signing team") if !unsigned && team.empty?
 
     commit = last_git_commit.fetch(:abbreviated_commit_hash)
-    name = "PayPayPay_#{scheme}_v#{version}_#{build_number}_#{Time.now.strftime('%Y%m%d-%H%M%S')}_#{commit}"
+    name = "Buffet_#{scheme}_v#{version}_#{build_number}_#{Time.now.strftime('%Y%m%d-%H%M%S')}_#{commit}"
     output = File.join(root, "output", scheme)
     xcargs = unsigned ? "CODE_SIGNING_ALLOWED=NO" : "DEVELOPMENT_TEAM=#{Shellwords.escape(team)}"
 

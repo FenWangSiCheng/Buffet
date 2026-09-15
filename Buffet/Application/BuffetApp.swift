@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct PayPayPayApp: App {
+struct BuffetApp: App {
     @State private var viewModel = AppContainer.makeCatalogViewModel()
 
     var body: some Scene {

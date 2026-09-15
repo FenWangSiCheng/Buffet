@@ -4,7 +4,7 @@
 
 一个使用 SwiftUI 构建的 iOS 商品列表与购物车示例。项目按 Clean Architecture 分层，展示层采用 MVVM + Observation（`@Observable`），通过 Swift 6.2、async/await 和显式 MainActor 隔离管理界面状态与异步请求，并基于 iOS 18 的 SwiftUI API 实现。
 
-仓库名称为 **Buffet**，Xcode 工程及应用 Target 名称为 **PayPayPay**。
+仓库名、Xcode 工程、应用 Target、测试 Target 与源码目录统一使用 **Buffet** 命名。
 
 ## 功能与范围
 
@@ -14,7 +14,7 @@
 - 购物车以单个快照持久化到 UserDefaults（数量 + 选中状态），重新启动后恢复，并兼容早期按商品 ID 存储的旧 key。
 - 加载指示、错误 Toast、请求取消与重复加载控制。
 
-当前商品数据来自 `PayPayPay/Resources/Fixtures/Products.json`，由 Moya 延迟 3 秒返回。三个环境都使用示例地址 `https://store/api`，尚未接入真实后端。扫码按钮是界面占位，付款按钮只会提示功能尚未上线。
+当前商品数据来自 `Buffet/Resources/Fixtures/Products.json`，由 Moya 延迟 3 秒返回。三个环境都使用示例地址 `https://store/api`，尚未接入真实后端。扫码按钮是界面占位，付款按钮只会提示功能尚未上线。
 
 ## 快速开始
 
@@ -25,7 +25,7 @@
    ```sh
    git clone https://github.com/FenWangSiCheng/Buffet.git
    cd Buffet
-   open PayPayPay.xcodeproj
+   open Buffet.xcodeproj
    ```
 
 2. 等待 Xcode 通过 Swift Package Manager 解析依赖。
@@ -39,7 +39,7 @@
 
 ```sh
 xcodebuild build \
-  -project PayPayPay.xcodeproj \
+  -project Buffet.xcodeproj \
   -scheme dev \
   -configuration Release-dev \
   -destination 'generic/platform=iOS' \
@@ -66,7 +66,7 @@ README 顶部徽章显示 **main 分支最近一次 push** 的构建结果：成
 ## 代码结构
 
 ```text
-PayPayPay/
+Buffet/
 ├── Application/           # SwiftUI 入口、环境读取、AppContainer 装配、Preview
 ├── Domain/
 │   ├── Entities/          # Product、Money、Cart、CartItem
@@ -83,13 +83,13 @@ PayPayPay/
 │   ├── Navigation/        # AppTab、MainTabView
 │   └── Shared/            # 主题常量、通用组件、展示扩展
 └── Resources/             # 图片、配置、启动页与样本数据
-PayPayPayTests/            # Domain、Data、Presentation 单元测试
+BuffetTests/               # Domain、Data、Presentation 单元测试
 fastlane/                  # lint 与三环境打包入口
 ```
 
 依赖方向为 `Presentation → Domain ← Data`，具体实现只在 `Application/AppContainer` 中装配。各层职责：
 
-- **Application**：`PayPayPayApp` 使用 SwiftUI App 生命周期（没有 AppDelegate / SceneDelegate），用 `@State` 持有 `CatalogViewModel` 并通过 `.environment` 注入；`AppEnvironment` 从 Info.plist 读取环境标识与 API 地址。
+- **Application**：`BuffetApp` 使用 SwiftUI App 生命周期（没有 AppDelegate / SceneDelegate），用 `@State` 持有 `CatalogViewModel` 并通过 `.environment` 注入；`AppEnvironment` 从 Info.plist 读取环境标识与 API 地址。
 - **Domain**：不依赖任何 UI 或网络框架，只包含实体、仓储协议和 Use Case。`LoadProductsUseCase` 拉取商品后再读取购物车，`ManageCartUseCase` 是 actor，串行处理数量增减、选中与删除。
 - **Data**：`ProductAPIClient`（`@MainActor`）把 Moya 回调桥接为 async/await，`ProductRequest` 保证 continuation 只 resume 一次、取消时立即结束，解码转移到后台队列；`UserDefaultsCartRepository` 以单个快照读写购物车，并兼容早期按商品 ID 存储的旧 key。
 - **Presentation**：`CatalogViewModel` 是 `@MainActor` + `@Observable` 的唯一共享状态源，首页与购物车 Tab 共用；`CatalogState` 在数据或搜索词变化时一次性重算可见商品、购物车项、徽章数量、全选状态与合计金额，视图只读取结果。叶子视图只接收展示值与事件闭包。
@@ -100,9 +100,9 @@ fastlane/                  # lint 与三环境打包入口
 
 | Scheme | 用途 | 应用显示名称 | Bundle ID |
 | --- | --- | --- | --- |
-| `dev` | 开发 | 飞狼GO Dev | `cn.com.fenrir-inc.FenrirPay.dev` |
-| `stg` | 预发布 | 飞狼GO Stg | `cn.com.fenrir-inc.FenrirPay.stg` |
-| `pro` | 生产 | 飞狼GO | `cn.com.fenrir-inc.FenrirPay` |
+| `dev` | 开发 | Buffet Dev | `cn.com.fenrir-inc.Buffet.dev` |
+| `stg` | 预发布 | Buffet Stg | `cn.com.fenrir-inc.Buffet.stg` |
+| `pro` | 生产 | Buffet | `cn.com.fenrir-inc.Buffet` |
 
 三个环境可同时安装，UserDefaults 随各自 Bundle ID 隔离。每个 Scheme 的 Run / Test / Analyze 使用 `Debug-环境`，Profile / Archive 使用 `Release-环境`。
 
@@ -114,7 +114,7 @@ fastlane/                  # lint 与三环境打包入口
 
 ## 依赖
 
-iOS 依赖由 Swift Package Manager 管理，锁文件位于 `PayPayPay.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`。
+iOS 依赖由 Swift Package Manager 管理，锁文件位于 `Buffet.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved`。
 
 | 依赖 | 锁定版本 | 用途 |
 | --- | --- | --- |
@@ -132,10 +132,10 @@ iOS 依赖由 Swift Package Manager 管理，锁文件位于 `PayPayPay.xcodepro
 
 ```sh
 xcodebuild test \
-  -project PayPayPay.xcodeproj \
+  -project Buffet.xcodeproj \
   -scheme dev \
   -destination 'platform=iOS Simulator,id=<SIMULATOR_ID>' \
-  -only-testing:PayPayPayTests \
+  -only-testing:BuffetTests \
   -onlyUsePackageVersionsFromResolvedFile \
   CODE_SIGNING_ALLOWED=NO
 ```
@@ -170,7 +170,7 @@ brew install swiftlint
 bundle exec fastlane ios lint
 ```
 
-`.swiftlint.yml` 使用默认规则，检查范围限定为 `PayPayPay/`（应用）与 `PayPayPayTests/`（单元测试），并额外用自定义规则校验分层依赖（见「代码结构」）。三个 Fastlane 打包入口都会先执行 lint；error 阻止打包，warning 保留为提示。
+`.swiftlint.yml` 使用默认规则，检查范围限定为 `Buffet/`（应用）与 `BuffetTests/`（单元测试），并额外用自定义规则校验分层依赖（见「代码结构」）。三个 Fastlane 打包入口都会先执行 lint；error 阻止打包，warning 保留为提示。
 
 ### 归档与导出
 

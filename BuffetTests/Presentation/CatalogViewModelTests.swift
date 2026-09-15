@@ -1,5 +1,5 @@
 import XCTest
-@testable import PayPayPay
+@testable import Buffet
 
 final class CatalogViewModelTests: XCTestCase {
     @MainActor

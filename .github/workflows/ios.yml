@@ -24,7 +24,7 @@ jobs:
       - name: Build dev without signing
         run: |
           xcodebuild build \
-            -project PayPayPay.xcodeproj \
+            -project Buffet.xcodeproj \
             -scheme dev \
             -configuration Release-dev \
             -destination 'generic/platform=iOS' \

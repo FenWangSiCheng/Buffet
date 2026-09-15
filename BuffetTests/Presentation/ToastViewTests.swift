@@ -1,6 +1,6 @@
 import SwiftUI
 import XCTest
-@testable import PayPayPay
+@testable import Buffet
 
 final class ToastViewTests: XCTestCase {
     @MainActor

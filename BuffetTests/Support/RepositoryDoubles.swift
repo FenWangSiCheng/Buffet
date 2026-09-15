@@ -1,5 +1,5 @@
 import Foundation
-@testable import PayPayPay
+@testable import Buffet
 
 @MainActor
 final class InMemoryCartRepository: CartRepository {

@@ -1,6 +1,6 @@
 import Moya
 import XCTest
-@testable import PayPayPay
+@testable import Buffet
 
 final class RemoteProductRepositoryTests: XCTestCase {
     private struct DecodingProbe: Decodable, Sendable {

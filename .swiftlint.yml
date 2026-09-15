@@ -1,17 +1,17 @@
 # Use SwiftLint's default rules; only limit the source directories.
 included:
-  - PayPayPay
-  - PayPayPayTests
+  - Buffet
+  - BuffetTests
 
 custom_rules:
   domain_framework_dependency:
-    included: "PayPayPay/Domain/.*\\.swift"
+    included: "Buffet/Domain/.*\\.swift"
     name: "Domain Framework Dependency"
     regex: "(?m)^import (SwiftUI|UIKit|Moya|Kingfisher)$"
     message: "Domain must not import UI or data frameworks."
     severity: error
   data_ui_dependency:
-    included: "PayPayPay/Data/.*\\.swift"
+    included: "Buffet/Data/.*\\.swift"
     name: "Data UI Dependency"
     regex: "(?m)^import (SwiftUI|UIKit)$"
     message: "Data must not import UI frameworks."

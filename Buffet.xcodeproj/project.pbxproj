@@ -52,7 +52,7 @@
 		C139A97971D59137ABDC71F3 /* ProductEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8CF1C2A0AEADC176FAAE937 /* ProductEndpoint.swift */; };
 		CA99AD7269CD183604231CA1 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E48C96B1B08DCF0FD9451B /* Theme.swift */; };
 		CCA62F432F40A66CCF2717F1 /* CatalogViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A56FDF68AB4F5824A7ED9E /* CatalogViewModelTests.swift */; };
-		D4783F29F9ACD2838F6D2B6D /* PayPayPayApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ABF12882F09A40B9619D02 /* PayPayPayApp.swift */; };
+		D4783F29F9ACD2838F6D2B6D /* BuffetApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4ABF12882F09A40B9619D02 /* BuffetApp.swift */; };
 		D9642CE461B9F08F51B91522 /* CartSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE9BCD9D1E6A70E49D90FCC /* CartSummaryView.swift */; };
 		DBE360A1517A4566D283AF83 /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAB061664196A3A4066FCEE /* ToastView.swift */; };
 		E05D445CE8533962E88A7A95 /* RemoteProductRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C028B4F0D420D28C77052D /* RemoteProductRepository.swift */; };
@@ -66,7 +66,7 @@
 			containerPortal = 1591F91324EBD8AD001AA4A7 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 1591F91A24EBD8AD001AA4A7;
-			remoteInfo = PayPayPay;
+			remoteInfo = Buffet;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -77,13 +77,13 @@
 		0CB6F380F53255A3F6B8D389 /* QuantityButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuantityButton.swift; sourceTree = "<group>"; };
 		122E5AE023354A1C5CA45532 /* AppContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContainer.swift; sourceTree = "<group>"; };
 		130FB28366D1C4ECA21FAA41 /* CatalogState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogState.swift; sourceTree = "<group>"; };
-		156B50142507322D0047C794 /* PayPayPay-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PayPayPay-Bridging-Header.h"; sourceTree = "<group>"; };
-		1591F91B24EBD8AD001AA4A7 /* PayPayPay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PayPayPay.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		156B50142507322D0047C794 /* Buffet-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Buffet-Bridging-Header.h"; sourceTree = "<group>"; };
+		1591F91B24EBD8AD001AA4A7 /* Buffet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Buffet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1591F92424EBD8AE001AA4A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1591F92724EBD8AE001AA4A7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		1591F92A24EBD8AE001AA4A7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1591F92C24EBD8AE001AA4A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1591F93124EBD8AE001AA4A7 /* PayPayPayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PayPayPayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1591F93124EBD8AE001AA4A7 /* BuffetTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BuffetTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1591F93724EBD8AE001AA4A7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		15B324EA25552CC500C36844 /* Products.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Products.json; sourceTree = "<group>"; };
 		19B5C840D5D2215569F588A3 /* ManageCartUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageCartUseCaseTests.swift; sourceTree = "<group>"; };
@@ -130,7 +130,7 @@
 		EB67BAED4F17420442FB1ECF /* RepositoryError+Moya.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RepositoryError+Moya.swift"; sourceTree = "<group>"; };
 		EF0A221224799CA667F996B5 /* RemoteProductRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteProductRepositoryTests.swift; sourceTree = "<group>"; };
 		EFD629D125A88C9902E1F523 /* dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = dev.xcconfig; sourceTree = "<group>"; };
-		F4ABF12882F09A40B9619D02 /* PayPayPayApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PayPayPayApp.swift; sourceTree = "<group>"; };
+		F4ABF12882F09A40B9619D02 /* BuffetApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BuffetApp.swift; sourceTree = "<group>"; };
 		FBE9BCD9D1E6A70E49D90FCC /* CartSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartSummaryView.swift; sourceTree = "<group>"; };
 		FF36BA257AF21B8C0B81FA6C /* LoadProductsUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadProductsUseCaseTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -180,8 +180,8 @@
 		1591F91224EBD8AD001AA4A7 = {
 			isa = PBXGroup;
 			children = (
-				1591F91D24EBD8AD001AA4A7 /* PayPayPay */,
-				1591F93424EBD8AE001AA4A7 /* PayPayPayTests */,
+				1591F91D24EBD8AD001AA4A7 /* Buffet */,
+				1591F93424EBD8AE001AA4A7 /* BuffetTests */,
 				1591F91C24EBD8AD001AA4A7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -189,13 +189,13 @@
 		1591F91C24EBD8AD001AA4A7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1591F91B24EBD8AD001AA4A7 /* PayPayPay.app */,
-				1591F93124EBD8AE001AA4A7 /* PayPayPayTests.xctest */,
+				1591F91B24EBD8AD001AA4A7 /* Buffet.app */,
+				1591F93124EBD8AE001AA4A7 /* BuffetTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		1591F91D24EBD8AD001AA4A7 /* PayPayPay */ = {
+		1591F91D24EBD8AD001AA4A7 /* Buffet */ = {
 			isa = PBXGroup;
 			children = (
 				9E4DE3BE45019DCD7A43CF46 /* Application */,
@@ -204,10 +204,10 @@
 				55DA2BCF14D152F4B6D73FF4 /* Presentation */,
 				D3507EF6B52C05947EFC6471 /* Resources */,
 			);
-			path = PayPayPay;
+			path = Buffet;
 			sourceTree = "<group>";
 		};
-		1591F93424EBD8AE001AA4A7 /* PayPayPayTests */ = {
+		1591F93424EBD8AE001AA4A7 /* BuffetTests */ = {
 			isa = PBXGroup;
 			children = (
 				CAC9B29A196A8B31F84F9B3E /* Data */,
@@ -216,7 +216,7 @@
 				47D1F5E2087883581994E181 /* Presentation */,
 				C69421A7ACFF0E4CF11B444B /* Support */,
 			);
-			path = PayPayPayTests;
+			path = BuffetTests;
 			sourceTree = "<group>";
 		};
 		23459A02E724CDD274A8409F /* Models */ = {
@@ -365,9 +365,9 @@
 				D02EB724B236DD913E873F60 /* AppEnvironment.swift */,
 				F8C457EF511586DB7FAC7CE3 /* DependencyInjection */,
 				1591F92C24EBD8AE001AA4A7 /* Info.plist */,
-				156B50142507322D0047C794 /* PayPayPay-Bridging-Header.h */,
+				156B50142507322D0047C794 /* Buffet-Bridging-Header.h */,
 				74A18E8803B909DA5113EFEE /* Previews */,
-				F4ABF12882F09A40B9619D02 /* PayPayPayApp.swift */,
+				F4ABF12882F09A40B9619D02 /* BuffetApp.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -522,9 +522,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1591F91A24EBD8AD001AA4A7 /* PayPayPay */ = {
+		1591F91A24EBD8AD001AA4A7 /* Buffet */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1591F94524EBD8AE001AA4A7 /* Build configuration list for PBXNativeTarget "PayPayPay" */;
+			buildConfigurationList = 1591F94524EBD8AE001AA4A7 /* Build configuration list for PBXNativeTarget "Buffet" */;
 			buildPhases = (
 				1591F91724EBD8AD001AA4A7 /* Sources */,
 				1591F91824EBD8AD001AA4A7 /* Frameworks */,
@@ -534,18 +534,18 @@
 			);
 			dependencies = (
 			);
-			name = PayPayPay;
+			name = Buffet;
 			packageProductDependencies = (
 				1591F94F24EBDA55001AA4A7 /* Moya */,
 				1591F95224EBDAA4001AA4A7 /* Kingfisher */,
 			);
-			productName = PayPayPay;
-			productReference = 1591F91B24EBD8AD001AA4A7 /* PayPayPay.app */;
+			productName = Buffet;
+			productReference = 1591F91B24EBD8AD001AA4A7 /* Buffet.app */;
 			productType = "com.apple.product-type.application";
 		};
-		1591F93024EBD8AE001AA4A7 /* PayPayPayTests */ = {
+		1591F93024EBD8AE001AA4A7 /* BuffetTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 1591F94824EBD8AE001AA4A7 /* Build configuration list for PBXNativeTarget "PayPayPayTests" */;
+			buildConfigurationList = 1591F94824EBD8AE001AA4A7 /* Build configuration list for PBXNativeTarget "BuffetTests" */;
 			buildPhases = (
 				1591F92D24EBD8AE001AA4A7 /* Sources */,
 				1591F92E24EBD8AE001AA4A7 /* Frameworks */,
@@ -556,9 +556,9 @@
 			dependencies = (
 				1591F93324EBD8AE001AA4A7 /* PBXTargetDependency */,
 			);
-			name = PayPayPayTests;
-			productName = PayPayPayTests;
-			productReference = 1591F93124EBD8AE001AA4A7 /* PayPayPayTests.xctest */;
+			name = BuffetTests;
+			productName = BuffetTests;
+			productReference = 1591F93124EBD8AE001AA4A7 /* BuffetTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -581,7 +581,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 1591F91624EBD8AD001AA4A7 /* Build configuration list for PBXProject "PayPayPay" */;
+			buildConfigurationList = 1591F91624EBD8AD001AA4A7 /* Build configuration list for PBXProject "Buffet" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -598,8 +598,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1591F91A24EBD8AD001AA4A7 /* PayPayPay */,
-				1591F93024EBD8AE001AA4A7 /* PayPayPayTests */,
+				1591F91A24EBD8AD001AA4A7 /* Buffet */,
+				1591F93024EBD8AE001AA4A7 /* BuffetTests */,
 			);
 		};
 /* End PBXProject section */
@@ -662,7 +662,7 @@
 				A73907C7118531BD563BC9ED /* Money+Currency.swift in Sources */,
 				32C65D5B2A4750EB2B833140 /* RepositoryError+Message.swift in Sources */,
 				FFD492A65D0B3623BE7BB7F3 /* Color+Theme.swift in Sources */,
-				D4783F29F9ACD2838F6D2B6D /* PayPayPayApp.swift in Sources */,
+				D4783F29F9ACD2838F6D2B6D /* BuffetApp.swift in Sources */,
 				31B8CC710C31124B4F051A62 /* AppTab.swift in Sources */,
 				9A7221AD05C252DAA4F7C0D5 /* ProductPriceView.swift in Sources */,
 				AE6054D45860CDB6F211C68A /* QuantityButton.swift in Sources */,
@@ -690,7 +690,7 @@
 /* Begin PBXTargetDependency section */
 		1591F93324EBD8AE001AA4A7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 1591F91A24EBD8AD001AA4A7 /* PayPayPay */;
+			target = 1591F91A24EBD8AD001AA4A7 /* Buffet */;
 			targetProxy = 1591F93224EBD8AE001AA4A7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -715,10 +715,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"PayPayPay/Resources/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Buffet/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = 533H75UL22;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = PayPayPay/Application/Info.plist;
+				INFOPLIST_FILE = Buffet/Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -726,7 +726,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "PayPayPay/Application/PayPayPay-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Buffet/Application/Buffet-Bridging-Header.h";
 			};
 			name = "Release-stg";
 		};
@@ -738,10 +738,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"PayPayPay/Resources/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Buffet/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = 533H75UL22;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = PayPayPay/Application/Info.plist;
+				INFOPLIST_FILE = Buffet/Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -749,7 +749,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "PayPayPay/Application/PayPayPay-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Buffet/Application/Buffet-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = "Debug-pro";
@@ -762,10 +762,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"PayPayPay/Resources/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Buffet/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = 533H75UL22;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = PayPayPay/Application/Info.plist;
+				INFOPLIST_FILE = Buffet/Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -773,7 +773,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "PayPayPay/Application/PayPayPay-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Buffet/Application/Buffet-Bridging-Header.h";
 			};
 			name = "Release-pro";
 		};
@@ -845,15 +845,15 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 533H75UL22;
-				INFOPLIST_FILE = PayPayPayTests/Info.plist;
+				INFOPLIST_FILE = BuffetTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayTests;
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.BuffetTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PayPayPay.app/PayPayPay";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Buffet.app/Buffet";
 			};
 			name = "Release-stg";
 		};
@@ -864,15 +864,15 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 533H75UL22;
-				INFOPLIST_FILE = PayPayPayTests/Info.plist;
+				INFOPLIST_FILE = BuffetTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayTests;
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.BuffetTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PayPayPay.app/PayPayPay";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Buffet.app/Buffet";
 			};
 			name = "Release-pro";
 		};
@@ -884,10 +884,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"PayPayPay/Resources/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Buffet/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = 533H75UL22;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = PayPayPay/Application/Info.plist;
+				INFOPLIST_FILE = Buffet/Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -895,7 +895,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "PayPayPay/Application/PayPayPay-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Buffet/Application/Buffet-Bridging-Header.h";
 			};
 			name = "Release-dev";
 		};
@@ -906,15 +906,15 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 533H75UL22;
-				INFOPLIST_FILE = PayPayPayTests/Info.plist;
+				INFOPLIST_FILE = BuffetTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayTests;
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.BuffetTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PayPayPay.app/PayPayPay";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Buffet.app/Buffet";
 			};
 			name = "Debug-stg";
 		};
@@ -926,10 +926,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"PayPayPay/Resources/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Buffet/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = 533H75UL22;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = PayPayPay/Application/Info.plist;
+				INFOPLIST_FILE = Buffet/Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -937,7 +937,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "PayPayPay/Application/PayPayPay-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Buffet/Application/Buffet-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = "Debug-dev";
@@ -1176,10 +1176,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "\"PayPayPay/Resources/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Buffet/Resources/Preview Content\"";
 				DEVELOPMENT_TEAM = 533H75UL22;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = PayPayPay/Application/Info.plist;
+				INFOPLIST_FILE = Buffet/Application/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1187,7 +1187,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "PayPayPay/Application/PayPayPay-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "Buffet/Application/Buffet-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = "Debug-stg";
@@ -1199,15 +1199,15 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 533H75UL22;
-				INFOPLIST_FILE = PayPayPayTests/Info.plist;
+				INFOPLIST_FILE = BuffetTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayTests;
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.BuffetTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PayPayPay.app/PayPayPay";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Buffet.app/Buffet";
 			};
 			name = "Release-dev";
 		};
@@ -1218,15 +1218,15 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 533H75UL22;
-				INFOPLIST_FILE = PayPayPayTests/Info.plist;
+				INFOPLIST_FILE = BuffetTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayTests;
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.BuffetTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PayPayPay.app/PayPayPay";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Buffet.app/Buffet";
 			};
 			name = "Debug-dev";
 		};
@@ -1298,22 +1298,22 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 533H75UL22;
-				INFOPLIST_FILE = PayPayPayTests/Info.plist;
+				INFOPLIST_FILE = BuffetTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = fenrir.PayPayPayTests;
+				PRODUCT_BUNDLE_IDENTIFIER = fenrir.BuffetTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PayPayPay.app/PayPayPay";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Buffet.app/Buffet";
 			};
 			name = "Debug-pro";
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1591F91624EBD8AD001AA4A7 /* Build configuration list for PBXProject "PayPayPay" */ = {
+		1591F91624EBD8AD001AA4A7 /* Build configuration list for PBXProject "Buffet" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F4295E9B059149341A3E8435 /* Debug-dev */,
@@ -1326,7 +1326,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Release-pro";
 		};
-		1591F94524EBD8AE001AA4A7 /* Build configuration list for PBXNativeTarget "PayPayPay" */ = {
+		1591F94524EBD8AE001AA4A7 /* Build configuration list for PBXNativeTarget "Buffet" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84729995C1346D78728F43BA /* Debug-dev */,
@@ -1339,7 +1339,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = "Release-pro";
 		};
-		1591F94824EBD8AE001AA4A7 /* Build configuration list for PBXNativeTarget "PayPayPayTests" */ = {
+		1591F94824EBD8AE001AA4A7 /* Build configuration list for PBXNativeTarget "BuffetTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E2372DA1F9D9A8A216DE03F2 /* Debug-dev */,
