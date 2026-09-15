@@ -16,3 +16,10 @@ custom_rules:
     regex: "(?m)^import (SwiftUI|UIKit)$"
     message: "Data must not import UI frameworks."
     severity: error
+  presentation_infrastructure_dependency:
+    included: "Buffet/Presentation/.*\\.swift"
+    excluded: "Buffet/Presentation/Shared/Components/RemoteImage.swift"
+    name: "Presentation Infrastructure Dependency"
+    regex: "(?m)^import (Kingfisher|Moya)$"
+    message: "Presentation reaches infrastructure through an adapter; only RemoteImage may import the image library."
+    severity: error

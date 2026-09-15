@@ -17,7 +17,7 @@ struct ProductDTO: Decodable, Sendable {
 
     func toDomain(imageBaseURL: URL) throws -> Product {
         guard !id.isEmpty, let price else {
-            throw RepositoryError.incorrectDataReturned
+            throw RepositoryError.invalidData
         }
         let domainPrice = try nonNegativeMoney(price)
         let domainOriginalPrice = try originalPrice.map(nonNegativeMoney)
@@ -30,7 +30,7 @@ struct ProductDTO: Decodable, Sendable {
     /// A price is valid only when it parses as a non-negative decimal amount.
     private func nonNegativeMoney(_ value: String) throws -> Money {
         guard let money = Money(decimalString: value), money >= .zero else {
-            throw RepositoryError.incorrectDataReturned
+            throw RepositoryError.invalidData
         }
         return money
     }

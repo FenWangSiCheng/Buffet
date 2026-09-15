@@ -51,14 +51,33 @@ final class RemoteProductRepositoryTests: XCTestCase {
             _ = try await makeRepository(data: Data("[]".utf8), status: 503).fetchProducts(page: 0)
             XCTFail("Expected server maintenance")
         } catch {
-            XCTAssertEqual(error as? RepositoryError, .serverMaintenance)
+            XCTAssertEqual(error as? RepositoryError, .underMaintenance)
+        }
+    }
+
+    /// The data layer owns the HTTP vocabulary; everything above it speaks domain situations.
+    @MainActor
+    func testMapsHTTPStatusesOntoDomainSituations() async {
+        let cases: [(status: Int, expected: RepositoryError)] = [
+            (401, .unauthorized),
+            (404, .notFound),
+            (503, .underMaintenance),
+            (500, .unavailable)
+        ]
+        for (status, expected) in cases {
+            do {
+                _ = try await makeRepository(data: Data("[]".utf8), status: status).fetchProducts(page: 0)
+                XCTFail("Expected a failure for status \(status)")
+            } catch {
+                XCTAssertEqual(error as? RepositoryError, expected, "status \(status)")
+            }
         }
     }
 
     func testMapsConnectivityErrors() {
         XCTAssertEqual(RepositoryError(error: URLError(.notConnectedToInternet)),
-                       .notConnectionToInternet)
-        XCTAssertEqual(RepositoryError(error: URLError(.timedOut)), .notReachedServer)
+                       .offline)
+        XCTAssertEqual(RepositoryError(error: URLError(.timedOut)), .unreachable)
     }
 
     @MainActor
@@ -71,7 +90,7 @@ final class RemoteProductRepositoryTests: XCTestCase {
                 _ = try await makeRepository(data: Data(payload.utf8)).fetchProducts(page: 0)
                 XCTFail("Expected invalid data")
             } catch {
-                XCTAssertEqual(error as? RepositoryError, .incorrectDataReturned)
+                XCTAssertEqual(error as? RepositoryError, .invalidData)
             }
         }
     }

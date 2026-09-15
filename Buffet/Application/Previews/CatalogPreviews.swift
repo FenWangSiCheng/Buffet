@@ -1,10 +1,10 @@
 #if DEBUG
 import SwiftUI
 
-extension CatalogViewModel {
-    /// A view model backed by the bundled fixture data, for previews only.
-    static func preview() -> CatalogViewModel {
-        AppContainer.makeCatalogViewModel(
+extension AppModel {
+    /// An app model backed by the bundled fixture data, for previews only.
+    static func preview() -> AppModel {
+        AppContainer.makeAppModel(
             defaults: UserDefaults(suiteName: "Buffet.Previews") ?? .standard
         )
     }
@@ -12,7 +12,7 @@ extension CatalogViewModel {
 
 #Preview("Catalog - dark") {
     MainTabView()
-        .environment(CatalogViewModel.preview())
+        .environment(AppModel.preview())
         .preferredColorScheme(.dark)
 }
 #endif

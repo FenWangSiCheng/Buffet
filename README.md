@@ -78,10 +78,11 @@ Buffet/
 │   ├── Networking/        # Moya 请求、async/await 桥接、错误转换
 │   └── Repositories/      # RemoteProductRepository、UserDefaultsCartRepository
 ├── Presentation/
-│   ├── Products/          # CatalogState、CatalogViewModel、商品列表视图
-│   ├── Cart/              # 购物车列表与汇总栏
+│   ├── AppModel.swift     # 组装两个 feature store，负责跨 feature 的加载流程
+│   ├── Products/          # CatalogStore（商品、搜索、加载、错误）、商品列表视图
+│   ├── Cart/              # CartStore（购物车内容、选中、合计）、购物车视图
 │   ├── Navigation/        # AppTab、MainTabView
-│   └── Shared/            # 主题常量、通用组件、展示扩展
+│   └── Shared/            # 主题常量、通用组件（含 RemoteImage）、展示扩展
 └── Resources/             # 图片、配置、启动页与样本数据
 BuffetTests/               # Domain、Data、Presentation 单元测试
 fastlane/                  # lint 与三环境打包入口
@@ -89,12 +90,12 @@ fastlane/                  # lint 与三环境打包入口
 
 依赖方向为 `Presentation → Domain ← Data`，具体实现只在 `Application/AppContainer` 中装配。各层职责：
 
-- **Application**：`BuffetApp` 使用 SwiftUI App 生命周期（没有 AppDelegate / SceneDelegate），用 `@State` 持有 `CatalogViewModel` 并通过 `.environment` 注入；`AppEnvironment` 从 Info.plist 读取环境标识与 API 地址。
+- **Application**：`BuffetApp` 使用 SwiftUI App 生命周期（没有 AppDelegate / SceneDelegate），用 `@State` 持有 `AppModel` 并通过 `.environment` 注入；`AppEnvironment` 从 Info.plist 读取环境标识与 API 地址。
 - **Domain**：不依赖任何 UI 或网络框架，只包含实体、仓储协议和 Use Case。`LoadProductsUseCase` 拉取商品后再读取购物车，`ManageCartUseCase` 是 actor，串行处理数量增减、选中与删除。
 - **Data**：`ProductAPIClient`（`@MainActor`）把 Moya 回调桥接为 async/await，`ProductRequest` 保证 continuation 只 resume 一次、取消时立即结束，解码转移到后台队列；`UserDefaultsCartRepository` 以单个快照读写购物车，并兼容早期按商品 ID 存储的旧 key。
-- **Presentation**：`CatalogViewModel` 是 `@MainActor` + `@Observable` 的唯一共享状态源，首页与购物车 Tab 共用；`CatalogState` 在数据或搜索词变化时一次性重算可见商品、购物车项、徽章数量、全选状态与合计金额，视图只读取结果。叶子视图只接收展示值与事件闭包。
+- **Presentation**：按 feature 分成 `CatalogStore`（商品、搜索、加载去重、错误文案）与 `CartStore`（购物车内容、选中、徽章数量、合计金额）两个 `@MainActor` + `@Observable` 状态源，各自持有对应的 Use Case，派生值在数据变化时一次性重算，视图只读取结果。`AppModel` 只负责跨 feature 的流程：加载商品后把带购物车信息的快照交给 `CartStore`。远程图片统一经由 `RemoteImage` 获取，图片库只在这一个文件里出现。叶子视图只接收展示值与事件闭包。
 
-分层方向由 `.swiftlint.yml` 的自定义规则强制：Domain 不得 import SwiftUI / UIKit / Moya / Kingfisher，Data 不得 import SwiftUI / UIKit。金额在 Domain 中用 `Money` / `Decimal` 表达，取值校验集中在 DTO 边界；网络失败统一映射为 `RepositoryError`，展示文案集中在 `Presentation/Shared/Extensions`。目前业务代码位于单个应用 Target，尚未拆分为独立 Package。
+分层方向由 `.swiftlint.yml` 的自定义规则强制：Domain 不得 import SwiftUI / UIKit / Moya / Kingfisher，Data 不得 import SwiftUI / UIKit，Presentation 只能通过 `RemoteImage` 接触图片库。金额在 Domain 中用 `Money` / `Decimal` 表达，取值校验集中在 DTO 边界；HTTP 状态码只出现在 Data，并在此映射为 `RepositoryError` 的领域语义（如 `.offline`、`.underMaintenance`、`.invalidData`），展示文案集中在 `Presentation/Shared/Extensions`。目前业务代码位于单个应用 Target，尚未拆分为独立 Package。
 
 ## 环境配置
 
@@ -145,8 +146,8 @@ xcodebuild test \
 单元测试按 `Domain` / `Data` / `Presentation` 分组，覆盖：
 
 - 购物车规则与持久化：数量不会为负、清零后自动取消选中、全选只作用于购物车内的商品、删除选中项后写入原子快照、旧 key 迁移、`Decimal` 计费。
-- 加载与网络：页码透传、请求返回后恢复最新购物车、HTTP 状态码与 URLError 映射、非法载荷与空 ID 校验、后台队列解码、在途请求取消。
-- 展示层：重复加载去重、取消语义、旧请求结果不能覆盖新结果、购物车派生值（徽章 / 合计 / 全选）、Toast 自动关闭。
+- 加载与网络：页码透传、请求返回后恢复最新购物车、HTTP 状态码与 URLError 到领域语义的映射、非法载荷与空 ID 校验、后台队列解码、在途请求取消。
+- 展示层：重复加载去重、取消语义、旧请求结果不能覆盖新结果、购物车派生值（徽章 / 合计 / 全选）、搜索与购物车互不影响、Toast 自动关闭。
 
 CI 当前不会运行测试，编译徽章不代表测试结果。
 

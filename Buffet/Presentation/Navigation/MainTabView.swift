@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @Environment(CatalogViewModel.self) private var viewModel
+    @Environment(AppModel.self) private var app
     @State private var selection: AppTab = .home
 
     var body: some View {
@@ -13,7 +13,7 @@ struct MainTabView: View {
             Tab("购物车", systemImage: "cart.fill", value: AppTab.cart) {
                 CartView()
             }
-            .badge(viewModel.state.cartItemCount)
+            .badge(app.cart.itemCount)
         }
         .tint(.orange)
     }
@@ -22,6 +22,6 @@ struct MainTabView: View {
 #if DEBUG
 #Preview {
     MainTabView()
-        .environment(CatalogViewModel.preview())
+        .environment(AppModel.preview())
 }
 #endif

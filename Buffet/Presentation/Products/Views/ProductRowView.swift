@@ -1,4 +1,3 @@
-import Kingfisher
 import SwiftUI
 
 struct ProductRowView: View {
@@ -8,9 +7,7 @@ struct ProductRowView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            KFImage(model.product.imageURL)
-                .placeholder { ProgressView() }
-                .resizable()
+            RemoteImage(url: model.product.imageURL) { ProgressView() }
                 .scaledToFit()
                 .frame(width: Theme.thumbnailSize, height: Theme.thumbnailSize)
 

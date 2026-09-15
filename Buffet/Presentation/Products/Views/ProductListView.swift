@@ -1,35 +1,35 @@
 import SwiftUI
 
 struct ProductListView: View {
-    @Environment(CatalogViewModel.self) private var viewModel
+    @Environment(AppModel.self) private var app
 
     var body: some View {
-        @Bindable var viewModel = viewModel
+        @Bindable var catalog = app.catalog
 
         NavigationStack {
-            List(viewModel.state.visibleItems) { item in
+            List(app.catalog.visibleProducts) { product in
                 ProductRowView(
-                    model: item,
-                    onDecrease: { decreaseQuantity(of: item) },
-                    onIncrease: { increaseQuantity(of: item) }
+                    model: app.cart.item(for: product),
+                    onDecrease: { decreaseQuantity(of: product) },
+                    onIncrease: { increaseQuantity(of: product) }
                 )
             }
             .listStyle(.plain)
             .overlay { emptyState }
             .safeAreaInset(edge: .bottom) { scanBadge }
             .navigationTitle("首页")
-            .searchable(text: $viewModel.searchText, prompt: Text("搜索商品"))
-            .overlay { ActivityIndicatorView(isAnimating: viewModel.state.isLoading) }
-            .task { await viewModel.load() }
-            .toast(message: viewModel.state.errorMessage) { viewModel.dismissError() }
+            .searchable(text: $catalog.searchText, prompt: Text("搜索商品"))
+            .overlay { ActivityIndicatorView(isAnimating: app.catalog.isLoading) }
+            .task { await app.loadCatalog() }
+            .toast(message: app.catalog.errorMessage) { app.catalog.dismissError() }
         }
     }
 
     /// Shown while the list has nothing to display, except when a request is still in flight.
     @ViewBuilder
     private var emptyState: some View {
-        if viewModel.state.visibleItems.isEmpty, !viewModel.state.isLoading {
-            if viewModel.state.searchText.isEmpty {
+        if app.catalog.visibleProducts.isEmpty, !app.catalog.isLoading {
+            if app.catalog.searchText.isEmpty {
                 ContentUnavailableView("暂无商品",
                                        systemImage: "bag",
                                        description: Text("下拉刷新试试"))
@@ -50,18 +50,18 @@ struct ProductListView: View {
             .padding(.bottom, 10)
     }
 
-    private func increaseQuantity(of item: CartItem) {
-        Task { await viewModel.increaseQuantity(productID: item.id) }
+    private func increaseQuantity(of product: Product) {
+        Task { await app.cart.increaseQuantity(of: product.id) }
     }
 
-    private func decreaseQuantity(of item: CartItem) {
-        Task { await viewModel.decreaseQuantity(productID: item.id) }
+    private func decreaseQuantity(of product: Product) {
+        Task { await app.cart.decreaseQuantity(of: product.id) }
     }
 }
 
 #if DEBUG
 #Preview {
     ProductListView()
-        .environment(CatalogViewModel.preview())
+        .environment(AppModel.preview())
 }
 #endif

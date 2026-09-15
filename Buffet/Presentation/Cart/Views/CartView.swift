@@ -1,20 +1,20 @@
 import SwiftUI
 
 struct CartView: View {
-    @Environment(CatalogViewModel.self) private var viewModel
+    @Environment(AppModel.self) private var app
     @State private var isEditing = false
     @State private var isShowingCheckoutNotice = false
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                if viewModel.state.cartItems.isEmpty {
+                if app.cart.cartItems.isEmpty {
                     ContentUnavailableView(
                         "购物车空空如也，去逛逛吧~",
                         systemImage: "cart.badge.plus"
                     )
                 } else {
-                    List(viewModel.state.cartItems) { item in
+                    List(app.cart.cartItems) { item in
                         CartRowView(
                             model: item,
                             onToggleSelection: { toggleSelection(of: item) },
@@ -26,9 +26,9 @@ struct CartView: View {
 
                     CartSummaryView(
                         isEditing: $isEditing,
-                        isAllSelected: viewModel.state.isAllSelected,
-                        totalPrice: viewModel.state.totalPrice,
-                        hasSelection: viewModel.state.hasSelection,
+                        isAllSelected: app.cart.isAllSelected,
+                        totalPrice: app.cart.totalPrice,
+                        hasSelection: app.cart.hasSelection,
                         onToggleAll: { toggleAllSelection() },
                         onRemoveSelected: { removeSelected() },
                         onCheckout: { isShowingCheckoutNotice = true }
@@ -47,29 +47,29 @@ struct CartView: View {
     }
 
     private func toggleSelection(of item: CartItem) {
-        Task { await viewModel.setItemSelected(!item.isSelected, productID: item.id) }
+        Task { await app.cart.setSelected(!item.isSelected, productID: item.id) }
     }
 
     private func increaseQuantity(of item: CartItem) {
-        Task { await viewModel.increaseQuantity(productID: item.id) }
+        Task { await app.cart.increaseQuantity(of: item.id) }
     }
 
     private func decreaseQuantity(of item: CartItem) {
-        Task { await viewModel.decreaseQuantity(productID: item.id) }
+        Task { await app.cart.decreaseQuantity(of: item.id) }
     }
 
     private func toggleAllSelection() {
-        Task { await viewModel.setAllSelected(!viewModel.state.isAllSelected) }
+        Task { await app.cart.setAllSelected(!app.cart.isAllSelected) }
     }
 
     private func removeSelected() {
-        Task { await viewModel.removeSelected() }
+        Task { await app.cart.removeSelected() }
     }
 }
 
 #if DEBUG
 #Preview {
     CartView()
-        .environment(CatalogViewModel.preview())
+        .environment(AppModel.preview())
 }
 #endif

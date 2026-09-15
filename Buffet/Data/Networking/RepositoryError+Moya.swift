@@ -2,6 +2,7 @@ import Foundation
 import Moya
 
 extension RepositoryError {
+    /// Translates a transport failure into the situation the domain names.
     init(error: Error) {
         switch error {
         case let repositoryError as RepositoryError:
@@ -18,39 +19,40 @@ extension RepositoryError {
     private init(moyaError: MoyaError) {
         switch moyaError {
         case .jsonMapping, .objectMapping, .stringMapping:
-            self = .incorrectDataReturned
+            self = .invalidData
         case .statusCode(let response):
             self.init(statusCode: response.statusCode)
         case .underlying(let error, _):
             self.init(error: error)
         default:
-            self = .response(message: moyaError.errorDescription ?? "")
+            self = .rejected(message: moyaError.errorDescription ?? "")
         }
     }
 
     private init(urlError: URLError) {
         switch urlError.code {
         case .notConnectedToInternet:
-            self = .notConnectionToInternet
+            self = .offline
         case .cannotFindHost, .cannotConnectToHost, .dnsLookupFailed, .timedOut:
-            self = .notReachedServer
+            self = .unreachable
         case .cancelled:
             self = .unknown
         default:
-            self = .response(message: urlError.localizedDescription)
+            self = .rejected(message: urlError.localizedDescription)
         }
     }
 
+    /// Maps HTTP status codes onto domain situations; this is the only place that knows them.
     private init(statusCode: Int) {
         switch statusCode {
-        case 500...502, 504...599:
-            self = .serverError
-        case 503:
-            self = .serverMaintenance
+        case 401, 403:
+            self = .unauthorized
         case 404:
             self = .notFound
-        case 401, 403:
-            self = .authenticationFailed
+        case 503:
+            self = .underMaintenance
+        case 500...599:
+            self = .unavailable
         default:
             self = .unknown
         }
