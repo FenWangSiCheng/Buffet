@@ -15,6 +15,7 @@ struct MainTabView: View {
             }
             .badge(app.cart.itemCount)
         }
+        .adaptiveTabBarMinimizeBehavior()
         .tint(.orange)
     }
 }

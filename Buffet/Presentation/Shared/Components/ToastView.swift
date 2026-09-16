@@ -19,8 +19,7 @@ struct ToastModifier: ViewModifier {
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)
                     .frame(maxWidth: 240)
-                    .background(.regularMaterial,
-                                in: .rect(cornerRadius: Theme.toastCornerRadius))
+                    .adaptiveGlassBackground(cornerRadius: Theme.toastCornerRadius)
                     .transition(transition)
                     .task(id: message) {
                         try? await Task.sleep(for: Theme.toastDuration)

@@ -29,12 +29,14 @@ struct CartSummaryView: View {
             Button(isEditing ? "删 除" : "付 款",
                    action: isEditing ? onRemoveSelected : onCheckout)
                 .font(.footnote)
-                .buttonStyle(.borderedProminent)
-                .tint(hasSelection ? .red : .gray)
+                .adaptiveProminentButtonStyle(tint: isEditing ? .red : .orange)
                 .disabled(!hasSelection)
                 .frame(minHeight: Theme.minimumTapSize)
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 8)
+        .adaptiveGlassBackground(cornerRadius: Theme.floatingBarCornerRadius)
+        .padding(.horizontal, 12)
+        .padding(.bottom, 8)
     }
 }

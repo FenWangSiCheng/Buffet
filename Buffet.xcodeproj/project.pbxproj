@@ -60,6 +60,7 @@
 		EBDB4E504BCD6AC9E20D8BBD /* CatalogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12BCB64B2C4C03B10732DED7 /* CatalogStore.swift */; };
 		EFB5ED074EBFDF6FB88B18B7 /* ProductListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82E30A7F2F8061041D89279 /* ProductListView.swift */; };
 		FFD492A65D0B3623BE7BB7F3 /* Color+Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D28D50255E5580266010AF5 /* Color+Theme.swift */; };
+		F10000000000000000000001 /* View+LiquidGlass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000002 /* View+LiquidGlass.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +102,7 @@
 		4419011D0CBDDC65E87FD255 /* ProductDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDTO.swift; sourceTree = "<group>"; };
 		4BAFA6BD8D0BF5E422C295F9 /* Money+Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Money+Currency.swift"; sourceTree = "<group>"; };
 		4D28D50255E5580266010AF5 /* Color+Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Theme.swift"; sourceTree = "<group>"; };
+		F10000000000000000000002 /* View+LiquidGlass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+LiquidGlass.swift"; sourceTree = "<group>"; };
 		54E9C68916538D046A43FA87 /* ActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicatorView.swift; sourceTree = "<group>"; };
 		5635E7FAB37AF0A30F33C6AF /* ProductRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductRepository.swift; sourceTree = "<group>"; };
 		674CDE44BCBF29E81464632D /* RepositoryDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryDoubles.swift; sourceTree = "<group>"; };
@@ -374,6 +376,7 @@
 			children = (
 				4BAFA6BD8D0BF5E422C295F9 /* Money+Currency.swift */,
 				8E14239C721A32F1619DE4E2 /* RepositoryError+Message.swift */,
+				F10000000000000000000002 /* View+LiquidGlass.swift */,
 				4D28D50255E5580266010AF5 /* Color+Theme.swift */,
 			);
 			path = Extensions;
@@ -676,6 +679,7 @@
 				A73907C7118531BD563BC9ED /* Money+Currency.swift in Sources */,
 				32C65D5B2A4750EB2B833140 /* RepositoryError+Message.swift in Sources */,
 				FFD492A65D0B3623BE7BB7F3 /* Color+Theme.swift in Sources */,
+				F10000000000000000000001 /* View+LiquidGlass.swift in Sources */,
 				D4783F29F9ACD2838F6D2B6D /* BuffetApp.swift in Sources */,
 				31B8CC710C31124B4F051A62 /* AppTab.swift in Sources */,
 				9A7221AD05C252DAA4F7C0D5 /* ProductPriceView.swift in Sources */,

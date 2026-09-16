@@ -7,5 +7,6 @@ enum Theme {
     static let thumbnailSize: CGFloat = 120
     static let rowPadding: CGFloat = 10
     static let toastCornerRadius: CGFloat = 20
+    static let floatingBarCornerRadius: CGFloat = 24
     static let toastDuration: Duration = .seconds(2)
 }
