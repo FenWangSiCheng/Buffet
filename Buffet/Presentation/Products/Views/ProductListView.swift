@@ -55,11 +55,11 @@ struct ProductListView: View {
     }
 
     private func increaseQuantity(of product: Product) {
-        Task { await app.cart.increaseQuantity(of: product.id) }
+        app.cart.increaseQuantity(of: product.id)
     }
 
     private func decreaseQuantity(of product: Product) {
-        Task { await app.cart.decreaseQuantity(of: product.id) }
+        app.cart.decreaseQuantity(of: product.id)
     }
 }
 

@@ -51,7 +51,7 @@ xcodebuild build \
 
 ## 持续集成
 
-[GitHub Actions](https://github.com/FenWangSiCheng/Buffet/actions/workflows/ios.yml) 在每次 push 后运行，也支持手动触发。配置位于 [`.github/workflows/ios.yml`](.github/workflows/ios.yml)。
+[GitHub Actions](https://github.com/FenWangSiCheng/Buffet/actions/workflows/ios.yml) 在每次 push、pull request 时运行，也支持手动触发。配置位于 [`.github/workflows/ios.yml`](.github/workflows/ios.yml)。
 
 | 项目 | 当前配置 |
 | --- | --- |
@@ -59,7 +59,7 @@ xcodebuild build \
 | 编译目标 | `dev` Scheme / `Release-dev` |
 | 依赖 | 使用已提交的 `Package.resolved` 中的版本 |
 | 签名 | 关闭，无需 Apple 证书 |
-| 检查范围 | 仅编译；不运行测试、SwiftLint 或 IPA 导出 |
+| 检查范围 | 架构边界检查、Domain 独立类型检查、SwiftLint、模拟器单元测试、Release 编译；不导出 IPA |
 
 README 顶部徽章显示 **main 分支最近一次 push** 的构建结果：成功为 `passing`，失败为 `failing`。其他分支也会触发编译，但不会改变此徽章对应的分支。点击徽章可查看日志；工作流推送并首次运行后才会有结果。
 
@@ -91,11 +91,11 @@ fastlane/                  # lint 与三环境打包入口
 依赖方向为 `Presentation → Domain ← Data`，具体实现只在 `Application/AppContainer` 中装配。各层职责：
 
 - **Application**：`BuffetApp` 使用 SwiftUI App 生命周期（没有 AppDelegate / SceneDelegate），用 `@State` 持有 `AppModel` 并通过 `.environment` 注入；`AppEnvironment` 从 Info.plist 读取环境标识与 API 地址。
-- **Domain**：不依赖任何 UI 或网络框架，只包含实体、仓储协议和 Use Case。`LoadProductsUseCase` 拉取商品后再读取购物车，`ManageCartUseCase` 是 actor，串行处理数量增减、选中与删除。
+- **Domain**：不依赖任何 UI 或网络框架，只包含实体、仓储协议和 Use Case。`LoadProductsUseCase` 只拉取商品，不修改购物车；`ManageCartUseCase` 在 MainActor 中同步处理首次恢复、数量增减、选中与删除。购物车仓储是同步本地存储契约，状态修改与保存之间没有挂起点。
 - **Data**：`ProductAPIClient`（`@MainActor`）把 Moya 回调桥接为 async/await，`ProductRequest` 保证 continuation 只 resume 一次、取消时立即结束，解码转移到后台队列；`UserDefaultsCartRepository` 以单个快照读写购物车，并兼容早期按商品 ID 存储的旧 key。
-- **Presentation**：按 feature 分成 `CatalogStore`（商品、搜索、加载去重、错误文案）与 `CartStore`（购物车内容、选中、徽章数量、合计金额）两个 `@MainActor` + `@Observable` 状态源，各自持有对应的 Use Case，派生值在数据变化时一次性重算，视图只读取结果。`AppModel` 只负责跨 feature 的流程：加载商品后把带购物车信息的快照交给 `CartStore`。远程图片统一经由 `RemoteImage` 获取，图片库只在这一个文件里出现。叶子视图只接收展示值与事件闭包。
+- **Presentation**：按 feature 分成 `CatalogStore`（商品、搜索、加载去重、错误文案）与 `CartStore`（购物车内容、选中、徽章数量、合计金额）两个 `@MainActor` + `@Observable` 状态源，各自持有对应的 Use Case，派生值在数据变化时一次性重算，视图只读取结果。`AppModel` 只负责跨 feature 的流程：请求通过有效性与取消检查后，在同一个 MainActor 执行片段中更新商品与购物车。`CatalogStore` 持有请求任务，显式取消和视图任务取消都会传递到底层请求。购物车只在首次接收商品时恢复持久化状态，后续刷新保留会话内编辑。远程图片统一经由 `RemoteImage` 获取，图片库只在这一个文件里出现。叶子视图只接收展示值与事件闭包。
 
-分层方向由 `.swiftlint.yml` 的自定义规则强制：Domain 不得 import SwiftUI / UIKit / Moya / Kingfisher，Data 不得 import SwiftUI / UIKit，Presentation 只能通过 `RemoteImage` 接触图片库。金额在 Domain 中用 `Money` / `Decimal` 表达，取值校验集中在 DTO 边界；HTTP 状态码只出现在 Data，并在此映射为 `RepositoryError` 的领域语义（如 `.offline`、`.underMaintenance`、`.invalidData`），展示文案集中在 `Presentation/Shared/Extensions`。目前业务代码位于单个应用 Target，尚未拆分为独立 Package。
+分层通过多项检查约束：`.swiftlint.yml` 的自定义规则限制框架导入，Domain 不得 import SwiftUI / UIKit / Moya / Kingfisher，Data 不得 import SwiftUI / UIKit，Presentation 只能通过 `RemoteImage` 接触图片库。金额在 Domain 中用 `Money` / `Decimal` 表达，取值校验集中在 DTO 边界；HTTP 状态码只出现在 Data，并在此映射为 `RepositoryError` 的领域语义（如 `.offline`、`.underMaintenance`、`.invalidData`），展示文案集中在 `Presentation/Shared/Extensions`。`scripts/check_architecture.py` 根据当前项目声明的类型检查直接的逆向层间引用，CI 还独立编译检查 Domain，防止它依赖其他层的实现。源码检查是轻量防线，不能代替编译器模块隔离（例如扩展成员与复杂语法不在其完整覆盖范围内）。目前业务代码位于单个应用 Target，尚未拆分为独立 Package。
 
 ## 环境配置
 
@@ -146,10 +146,10 @@ xcodebuild test \
 单元测试按 `Domain` / `Data` / `Presentation` 分组，覆盖：
 
 - 购物车规则与持久化：数量不会为负、清零后自动取消选中、全选只作用于购物车内的商品、删除选中项后写入原子快照、旧 key 迁移、`Decimal` 计费。
-- 加载与网络：页码透传、请求返回后恢复最新购物车、HTTP 状态码与 URLError 到领域语义的映射、非法载荷与空 ID 校验、后台队列解码、在途请求取消。
-- 展示层：重复加载去重、取消语义、旧请求结果不能覆盖新结果、购物车派生值（徽章 / 合计 / 全选）、搜索与购物车互不影响、Toast 自动关闭。
+- 加载与网络：页码透传、加载与购物车副作用分离、HTTP 状态码与 URLError 到领域语义的映射、非法载荷与空 ID 校验、后台队列解码、在途请求取消。
+- 展示层：重复加载去重、取消语义、仅取消 Store 后旧请求不能覆盖新商品或购物车、父任务取消、刷新期间的购物车编辑与持久化一致、购物车派生值（徽章 / 合计 / 全选）、搜索与购物车互不影响、Toast 自动关闭。
 
-CI 当前不会运行测试，编译徽章不代表测试结果。
+CI 会运行全部单元测试和架构检查，再进行 Release 编译。
 
 ## 代码检查与打包
 
@@ -164,6 +164,18 @@ bundle config set --local path vendor/bundle
 bundle install
 brew install swiftlint
 ```
+
+### 架构边界检查
+
+```sh
+python3 -m unittest discover -s scripts -p 'test_*.py'
+python3 scripts/check_architecture.py
+xcrun swiftc -swift-version 6 -typecheck \
+  Buffet/Domain/Entities/*.swift Buffet/Domain/Repositories/*.swift \
+  Buffet/Domain/UseCases/*.swift Buffet/Domain/Errors/*.swift
+```
+
+当前购物车仓储只负责小规模同步本地快照。将来接入远程购物车或异步数据库时，需要重新设计有版本的提交与持久化顺序，不能直接把同步契约改回带 `await` 的读写。
 
 ### SwiftLint
 

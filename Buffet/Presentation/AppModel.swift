@@ -2,7 +2,7 @@ import Observation
 
 /// Composes the feature stores and owns the workflows that span them.
 ///
-/// Loading the catalog also refreshes the cart annotations, which is the only place the two
+/// Accepting a catalog also refreshes the cart annotations, which is the only place the two
 /// features meet. The stores stay independent: each owns its own state and its own use case.
 @Observable
 @MainActor
@@ -15,9 +15,10 @@ final class AppModel {
         self.cart = cart
     }
 
-    /// Loads the catalog and hands the refreshed cart snapshot to the cart store.
+    /// Both stores commit in one main-actor turn after the request is validated.
     func loadCatalog() async {
-        guard let snapshot = await catalog.load() else { return }
-        cart.adopt(snapshot)
+        await catalog.load { products in
+            cart.updateProducts(products)
+        }
     }
 }

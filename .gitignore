@@ -95,3 +95,6 @@ vendor/bundle/
 output/
 fastlane/.env*
 !fastlane/.env.example
+
+# Python architecture-check cache
+__pycache__/

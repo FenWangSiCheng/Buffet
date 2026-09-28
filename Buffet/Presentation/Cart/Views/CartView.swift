@@ -47,23 +47,23 @@ struct CartView: View {
     }
 
     private func toggleSelection(of item: CartItem) {
-        Task { await app.cart.setSelected(!item.isSelected, productID: item.id) }
+        app.cart.setSelected(!item.isSelected, productID: item.id)
     }
 
     private func increaseQuantity(of item: CartItem) {
-        Task { await app.cart.increaseQuantity(of: item.id) }
+        app.cart.increaseQuantity(of: item.id)
     }
 
     private func decreaseQuantity(of item: CartItem) {
-        Task { await app.cart.decreaseQuantity(of: item.id) }
+        app.cart.decreaseQuantity(of: item.id)
     }
 
     private func toggleAllSelection() {
-        Task { await app.cart.setAllSelected(!app.cart.isAllSelected) }
+        app.cart.setAllSelected(!app.cart.isAllSelected)
     }
 
     private func removeSelected() {
-        Task { await app.cart.removeSelected() }
+        app.cart.removeSelected()
     }
 }
 

@@ -2,6 +2,7 @@ name: iOS dev Build
 
 on:
   push:
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -9,7 +10,7 @@ permissions:
 
 jobs:
   build:
-    name: Build dev
+    name: Check and build dev
     runs-on: macos-26
     timeout-minutes: 30
     steps:
@@ -20,6 +21,44 @@ jobs:
 
       - name: Show Xcode version
         run: xcodebuild -version
+
+      - name: Check architecture boundaries
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_*.py'
+          python3 scripts/check_architecture.py
+          xcrun swiftc -swift-version 6 -typecheck \
+            Buffet/Domain/Entities/*.swift \
+            Buffet/Domain/Repositories/*.swift \
+            Buffet/Domain/UseCases/*.swift \
+            Buffet/Domain/Errors/*.swift
+
+      - name: Run SwiftLint
+        run: |
+          if ! command -v swiftlint >/dev/null 2>&1; then
+            brew install swiftlint
+          fi
+          swiftlint lint --strict
+
+      - name: Run unit tests
+        run: |
+          SIMULATOR_ID="$(xcodebuild -showdestinations \
+            -project Buffet.xcodeproj -scheme dev \
+            -onlyUsePackageVersionsFromResolvedFile | python3 -c '
+          import re, sys
+          available = sys.stdin.read().split("Available destinations", 1)[1]
+          available = available.split("Ineligible destinations", 1)[0]
+          match = re.search(r"platform:iOS Simulator,[^\n]*id:([A-Fa-f0-9-]{36}),[^\n]*name:iPhone", available)
+          if not match:
+              sys.exit("No supported iPhone simulator found for the dev scheme")
+          print(match.group(1))
+          ')"
+          xcodebuild test \
+            -project Buffet.xcodeproj \
+            -scheme dev \
+            -destination "platform=iOS Simulator,id=$SIMULATOR_ID" \
+            -only-testing:BuffetTests \
+            -onlyUsePackageVersionsFromResolvedFile \
+            CODE_SIGNING_ALLOWED=NO
 
       - name: Build dev without signing
         run: |

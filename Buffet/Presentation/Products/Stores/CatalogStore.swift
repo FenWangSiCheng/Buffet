@@ -23,44 +23,50 @@ final class CatalogStore {
     private let loadProducts: LoadProductsUseCase
     /// Identifies the newest request, so a slower earlier response cannot replace it.
     private var loadID: UUID?
+    private var requestTask: Task<[Product], Error>?
 
     init(loadProducts: LoadProductsUseCase) {
         self.loadProducts = loadProducts
     }
 
-    /// Loads a page of the catalog.
-    ///
-    /// Returns the cart-annotated snapshot so the caller can hand it to `CartStore`; the catalog
-    /// itself only keeps the products, which is why the cart lives in its own store.
-    func load(page: Int = 0) async -> [CartItem]? {
-        guard !Task.isCancelled, !isLoading else { return nil }
+    /// Publishes accepted products and delivers them synchronously to the composing workflow.
+    func load(page: Int = 0, onLoaded: ([Product]) -> Void) async {
+        guard !Task.isCancelled, !isLoading else { return }
         let id = UUID()
+        let request = Task { try await loadProducts.execute(page: page) }
         loadID = id
+        requestTask = request
         isLoading = true
         dismissError()
         defer {
             if loadID == id {
                 isLoading = false
                 loadID = nil
+                requestTask = nil
             }
         }
         do {
-            let items = try await loadProducts.execute(page: page)
-            guard loadID == id else { return nil }
-            setProducts(items.map(\.product))
-            return items
+            let products = try await withTaskCancellationHandler {
+                try await request.value
+            } onCancel: {
+                request.cancel()
+            }
+            try Task.checkCancellation()
+            guard loadID == id else { return }
+            setProducts(products)
+            onLoaded(products)
         } catch is CancellationError {
             // Leaving the scene is not a user-visible failure.
-            return nil
         } catch {
-            guard loadID == id else { return nil }
+            guard loadID == id, !Task.isCancelled else { return }
             let repositoryError = (error as? RepositoryError) ?? .unknown
             errorMessage = repositoryError.errorDescription
-            return nil
         }
     }
 
     func cancelLoading() {
+        requestTask?.cancel()
+        requestTask = nil
         loadID = nil
         isLoading = false
     }
